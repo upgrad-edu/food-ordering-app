@@ -1,0 +1,55 @@
+.hBackground {
+    width: 100%;
+    height: 60px;
+    background-color: #29383d;
+    display: flex;
+    align-items: center;
+}
+.toolBarBack{
+    background-color: #29383d;
+}
+.hLogo {
+    padding: 10px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.right{
+    float: right;
+}
+
+.searchIcon{
+    color: white;
+}
+
+.searchBox{
+    border-radius: 4px;
+    width: 300px;
+    background-color:rgba(0, 0, 0, 0);
+    align-items: center;
+    float: left;
+    color: white;
+}
+
+.profile-picture{
+    border-radius: 4px;
+    float: right;
+}
+
+.tabs {
+    margin-bottom: 20px;
+}
+
+.disp-none{
+    display: none;
+}
+
+.disp-block{
+    display: block;
+    border-radius: 4px;
+    background-color: #A9A9A9;
+}
+
+.red {
+    color: red;
+}
