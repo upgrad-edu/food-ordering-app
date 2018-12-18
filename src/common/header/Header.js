@@ -14,7 +14,31 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Fastfood from '@material-ui/icons/Fastfood';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Modal from 'react-modal';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
 import './Header.css';
+const TabContainer = function (props) {
+    return (
+        <Typography component="div" style={{ padding: 0, textAlign: 'center' }}>
+            {props.children}
+        </Typography>
+    )
+}
+const modalBoxStyles = {
+    content: {
+        top: '50%',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        left: '50%',
+        right: 'auto'
+    }
+};
 const styles = theme => ({
     root: {
         width: '100%',
@@ -88,15 +112,38 @@ const styles = theme => ({
 });
 
 class PrimarySearchAppBar extends React.Component {
-    state = {
-        anchorEl: null,
-        mobileMoreAnchorEl: null,
-    };
+    constructor() {
+        super();
+        this.state = {
+            isValidUserLoggedIn: false,
+            userData: "",
+            anchorEl: null,
+            isModalOpen: false,//Modal State
+            value: 1,//Tab Value 1 is for login and 0 for SignUp
+            //Login page
+            loginContactRequired: "disp-none",
+            loginContact: "",
+            loginPasswordRequired: "disp-none",
+            loginPassword: "",
+            //Signup page
+            firstnameRequired: "disp-none",
+            firstname: "",
+            lastname: "",
+            emailRequired: "disp-none",
+            email: "",
+            registerPasswordRequired: "disp-none",
+            registerPassword: "",
+            contactRequired: "disp-none",
+            contact: ""
+        }
+    }
 
     handleProfileMenuOpen = event => {
         this.setState({ anchorEl: event.currentTarget });
     };
-
+    closeModalOnFocusOut = () => {
+        this.setState({ isModalOpen: false });
+    }
     handleMenuClose = () => {
         this.setState({ anchorEl: null });
         this.handleMobileMenuClose();
@@ -109,7 +156,63 @@ class PrimarySearchAppBar extends React.Component {
     handleMobileMenuClose = () => {
         this.setState({ mobileMoreAnchorEl: null });
     };
+    switchTabs = (event, value) => {
+        this.setState({ value });
+    }
+    handlerForShowingModals = () => {
+        this.setState({
+            isModalOpen: true,
+            value: 0,
+            loginContactRequired: "dispNone",
+            loginContact: "",
+            loginPasswordRequired: "dispNone",
+            loginPassword: "",
+            firstnameRequired: "dispNone",
+            firstname: "",
+            lastname: "",
+            emailRequired: "dispNone",
+            email: "",
+            registerPasswordRequired: "dispNone",
+            registerPassword: "",
+            contactRequired: "dispNone",
+            contact: ""
+        });
+        this.state.loginContact === "" ? this.setState({ loginContactRequired: "disp-block" }) : this.setState({ loginContactRequired: "disp-none" });
+        this.state.loginPassword === "" ? this.setState({ loginPasswordRequired: "disp-block" }) : this.setState({ loginPasswordRequired: "disp-none" });
+    }
 
+    loginContactChangeHandler = (e) => {
+        this.setState({ loginContact: e.target.value });
+    }
+
+    loginPasswordChangeHandler = (e) => {
+        this.setState({ loginPassword: e.target.value });
+    }
+
+    firstNameChangeHandler = (e) => {
+        this.setState({ firstname: e.target.value });
+    }
+
+    lastNameChangeHandler = (e) => {
+        this.setState({ lastname: e.target.value });
+    }
+
+    emailChangeHandler = (e) => {
+        this.setState({ email: e.target.value });
+    }
+
+    registerPasswordChangeHandler = (e) => {
+        this.setState({ registerPassword: e.target.value });
+    }
+
+    contactChangeHandler = (e) => {
+        this.setState({ contact: e.target.value });
+    }
+
+    onProfileIconClickHandler = () => {
+        this.setState({ displayMenu: "disp-block" });
+    }
+    
     render() {
         const { anchorEl, mobileMoreAnchorEl } = this.state;
         const { classes } = this.props;
@@ -183,8 +286,8 @@ class PrimarySearchAppBar extends React.Component {
                             </Grid>
                             <Grid item xs={6} sm={3}>
                                 <div className="profile-picture">
-                                    {/** Login Button*/}
-                                    <Button variant="contained" color="default" onClick={this.openModalHandler}>
+                                    {/** --Invoke the Login Modal along with sign up*/}
+                                    <Button variant="contained" color="default" onClick={this.handlerForShowingModals}>
                                         <AccountCircle /> LOGIN
                                     </Button>
                                 </div>
@@ -195,6 +298,98 @@ class PrimarySearchAppBar extends React.Component {
                 </AppBar>
                 {renderMenu}
                 {renderMobileMenu}
+                <Modal
+                        ariaHideApp={false}
+                        isOpen={this.state.isModalOpen}
+                        contentLabel="Login"
+                        onRequestClose={this.closeModalOnFocusOut}
+                        style={modalBoxStyles}>
+                        <Tabs className="tabs" value={this.state.value} onChange={this.switchTabs}>
+                            <Tab label="Login" />
+                            <Tab label="Signup" />
+                        </Tabs>
+
+                        {this.state.value === 0 &&
+                            <TabContainer>
+                                <FormControl required>
+                                    <InputLabel htmlFor="loginContact">Contact No.</InputLabel>
+                                    <Input id="loginContact" type="text" onChange={this.loginContactChangeHandler} />
+                                    <FormHelperText className={this.state.loginContactRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br /><br />
+                                <FormControl required>
+                                    <InputLabel htmlFor="loginPassword">Password</InputLabel>
+                                    <Input id="loginPassword" type="password" loginpassword={this.state.loginPassword} onChange={this.loginPasswordChangeHandler} />
+                                    <FormHelperText className={this.state.loginPasswordRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br /><br />
+                                {this.state.isValidUserLoggedIn === true &&
+                                    <FormControl>
+                                        <span className="successText">
+                                            Logged in successfully!
+                                    </span>
+                                    </FormControl>
+                                }
+                                <br /><br />
+                                <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
+                            </TabContainer>
+                        }
+
+                        {this.state.value === 1 &&
+                            <TabContainer>
+                                <FormControl required>
+                                    <InputLabel htmlFor="firstname">First Name</InputLabel>
+                                    <Input id="firstname" type="text" firstname={this.state.firstname} onChange={this.firstNameChangeHandler} />
+                                    <FormHelperText className={this.state.firstnameRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br /><br />
+                                <FormControl>
+                                    <InputLabel htmlFor="lastname">Last Name</InputLabel>
+                                    <Input id="lastname" type="text" lastname={this.state.lastname} onChange={this.lastNameChangeHandler} />
+                                </FormControl>
+                                <br /><br />
+                                <FormControl required>
+                                    <InputLabel htmlFor="email">Email</InputLabel>
+                                    <Input id="email" type="text" email={this.state.email} onChange={this.emailChangeHandler} />
+                                    <FormHelperText className={this.state.emailRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br /><br />
+                                <FormControl required>
+                                    <InputLabel htmlFor="registerPassword">Password</InputLabel>
+                                    <Input id="registerPassword" type="password" registerpassword={this.state.registerPassword} onChange={this.inputRegisterPasswordChangeHandler} />
+                                    <FormHelperText className={this.state.registerPasswordRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br /><br />
+                                <FormControl required>
+                                    <InputLabel htmlFor="contact">Contact No.</InputLabel>
+                                    <Input id="contact" type="text" contact={this.state.contact} onChange={this.contactChangeHandler} />
+                                    <FormHelperText className={this.state.contactRequired}>
+                                        <span className="red">required</span>
+                                    </FormHelperText>
+                                </FormControl>
+                                <br /><br />
+                                {this.state.registrationSuccess === true &&
+                                    <FormControl>
+                                        <span className="successText">
+                                            Registered successfully! Please login now!
+                                      </span>
+                                    </FormControl>
+                                }
+                                <br /><br />
+                                <Button variant="contained" color="primary" onClick={this.signupClickHandler}>SIGNUP</Button>
+                            </TabContainer>
+                        }
+                    </Modal>
             </div>
         );
     }
