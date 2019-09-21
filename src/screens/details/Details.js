@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import "./Details.css";
+import Container from "@material-ui/core/Container";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/Add";
 import details from "../../__mocks__/details";
 import "font-awesome/css/font-awesome.css";
 
@@ -110,10 +114,152 @@ class Details extends Component {
   };
 
   /**
+   * @description - Method to add items to cart and other calculations
+   */
+  addToCart = (item, category) => {
+    this.snackBarHandler("Item added to cart!");
+    const addedCartItem = this.state.cartItems || {
+      restaurant: this.state.restaurant,
+      itemList: [],
+      totalPrice: 0,
+      totalItemCount: 0
+    };
+    let findIndex = null;
+
+    // Finding item from List which already added
+    let findItem = addedCartItem.itemList.find((cartItem, index) => {
+      if (cartItem.item.id === item.id) {
+        findIndex = index;
+        return cartItem;
+      }
+      return undefined;
+    });
+
+    // if Already added then adding quantity and price (total)
+    if (findItem !== undefined) {
+      findItem.quantity = findItem.quantity + 1;
+      findItem.totalItemPrice = findItem.totalItemPrice + item.price;
+      addedCartItem.itemList[findIndex] = findItem;
+      findIndex = null;
+      addedCartItem.totalPrice = addedCartItem.totalPrice + item.price;
+      addedCartItem.totalItemCount = addedCartItem.totalItemCount + 1;
+    } else {
+      // If not already added then creating temp object and doing other calculations
+      const cartItem = {
+        quantity: 1,
+        categoryName: category.category_name,
+        categoryId: category.id,
+        item: item,
+        totalItemPrice: item.price
+      };
+      addedCartItem.totalPrice = addedCartItem.totalPrice + item.price;
+      addedCartItem.totalItemCount = addedCartItem.totalItemCount + 1;
+      // Push items to cart
+      addedCartItem.itemList.push(cartItem);
+    }
+
+    // Finally updating our addedcartitem state
+    this.setState({ cartItems: addedCartItem });
+  };
+
+  /**
+   * @description - Remove item from cart when user click (-) button
+   */
+  removeAnItemFromCart = (removeCartItem, index) => {
+    const addedCartItem = this.state.cartItems;
+    // Finding item based on index
+    let findItem = addedCartItem.itemList[index];
+    // Updating finded item based on index
+    findItem.quantity = findItem.quantity - 1;
+    findItem.totalItemPrice = findItem.totalItemPrice - findItem.item.price;
+    addedCartItem.totalPrice = addedCartItem.totalPrice - findItem.item.price;
+    addedCartItem.totalItemCount = addedCartItem.totalItemCount - 1;
+
+    // if quantity is goes less than or equal to zero - remove that item from cart
+    if (findItem.quantity <= 0) {
+      addedCartItem.itemList.splice(index, 1);
+      this.snackBarHandler("Item removed from cart!");
+    } else {
+      addedCartItem.itemList[index] = findItem;
+      this.snackBarHandler("Item quantity descreased by 1!");
+    }
+    // Updating cartitem in component state
+    this.setState({ cartItems: addedCartItem });
+  };
+
+  /**
+   * @description - add item from Mycart part - on (+) button click
+   */
+  addAnItemFromCart = (addCartItem, index) => {
+    this.snackBarHandler("Item quantity increased by 1!");
+    const addedCartItem = this.state.cartItems;
+    // Find item based on selected item index
+    let findItem = addedCartItem.itemList[index];
+    // Item found update properties
+    if (findItem !== undefined) {
+      findItem.quantity = findItem.quantity + 1;
+      findItem.totalItemPrice = findItem.totalItemPrice + findItem.item.price;
+      addedCartItem.totalPrice = addedCartItem.totalPrice + findItem.item.price;
+      addedCartItem.totalItemCount = addedCartItem.totalItemCount + 1;
+    }
+    addedCartItem.itemList[index] = findItem;
+    // Update cartItems in component state
+    this.setState({ cartItems: addedCartItem });
+  };
+
+  /**
+   * @description - Checkout cart functionality goes here
+   */
+  checkOutCart = e => {
+    this.checkLoginUpdate();
+    const addedCartItem = this.state.cartItems;
+    // check if items not added - alert user to add item
+    if (addedCartItem.itemList.length <= 0) {
+      this.snackBarHandler("Please add an item to your cart!");
+      return;
+    } else {
+      // check if user logged in , if not - alert user to login
+      if (sessionStorage.getItem("access-token") === null) {
+        this.snackBarHandler("Please login first!");
+        return;
+      } else {
+        // redirect to checkout page and passing cart items to checkout page
+        this.props.history.push({
+          pathname: "/checkout",
+          state: { cartDetail: this.state.cartItems }
+        });
+      }
+    }
+  };
+
+  /**
+   *
+   *@description - Common snackbar method to show messages
+   */
+  snackBarHandler = message => {
+    // if any snackbar open already close that
+    this.setState({ snackBarOpen: false });
+    // updating component state snackbar message
+    this.setState({ snackBarMessage: message });
+    // Show snackbar
+    this.setState({ snackBarOpen: true });
+  };
+
+  /**
+   * @description - Update login component state if any update
+   */
+  checkLoginUpdate = () => {
+    this.setState({
+      loggedIn: sessionStorage.getItem("access-token") == null ? false : true
+    });
+  };
+
+  /**
    * @description - render method of component
    */
   render() {
     let restaurant = this.state.restaurant;
+    let cartItems = this.state.cartItems;
     const { classes } = this.props;
     return (
       <div className="details">
@@ -204,6 +350,73 @@ class Details extends Component {
                 </Grid>
               </Grid>
             </Paper>
+            <Container style={{ marginTop: 20 }}>
+              <Grid container spacing={2} justify="space-between">
+                <Grid item xs={12} sm={5}>
+                  {(restaurant.categories || []).map((category, index) => (
+                    <div key={category.id} style={{ marginBottom: 16 }}>
+                      <Typography
+                        variant="caption"
+                        gutterBottom
+                        className="uppercase"
+                      >
+                        {category.category_name}
+                      </Typography>
+                      <Divider style={{ marginBottom: 8 }} />
+                      <Grid container spacing={2} direction="column">
+                        {(category.item_list || []).map((item, index) => (
+                          <Grid item xs container key={item.id}>
+                            <Grid
+                              container
+                              spacing={2}
+                              direction="row"
+                              justify="space-between"
+                              alignItems="center"
+                            >
+                              <Grid item>
+                                <Typography
+                                  variant="caption"
+                                  gutterBottom
+                                  className="capitalize"
+                                >
+                                  <i
+                                    className={
+                                      item.item_type !== "VEG"
+                                        ? "fa fa-circle redColor"
+                                        : "fa fa-circle greenColor"
+                                    }
+                                  />
+                                  <span style={{ marginLeft: 8 }}>
+                                    {item.item_name}
+                                  </span>
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography variant="caption" gutterBottom>
+                                  <i className="fa fa-inr"></i>
+                                  <span>{item.price}</span>
+                                  <IconButton
+                                    aria-label="Add to cart"
+                                    onClick={this.addToCart.bind(
+                                      this,
+                                      item,
+                                      category
+                                    )}
+                                    className="padding-4 margin-l-30"
+                                  >
+                                    <AddIcon />
+                                  </IconButton>
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </div>
+                  ))}
+                </Grid>
+              </Grid>
+            </Container>
           </div>
         )}
       </div>
