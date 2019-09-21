@@ -408,8 +408,6 @@ const styles = theme => ({
                                     </Card>
                                 </Grid>
                             </Grid>
-
-
                             <Snackbar 
                                 anchorOrigin={{
                                     vertical: 'bottom',
@@ -434,7 +432,6 @@ const styles = theme => ({
                                     </IconButton>
                                 ]}
                             />
-
                         </Container>
 
 
