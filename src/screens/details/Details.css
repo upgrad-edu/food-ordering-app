@@ -1,0 +1,48 @@
+.restaurant-details-header{
+    background: lightgray;
+}
+.uppercase{
+    text-transform: uppercase;
+}
+.capitalize{
+    text-transform: capitalize;
+}
+.item-list{
+    margin: 0px;
+    padding: 0px;
+}
+
+.redColor{
+    color: #BC4B4A;
+}
+
+.greenColor {
+    color: #5C995D;
+}
+
+
+.bold{
+    font-weight: bold !important;
+}
+
+.padding-4{
+    padding: 4px !important;
+}
+
+.margin-l-30{
+    margin-left: 30px !important;
+}
+
+.m-l-4{
+    margin-left: 4px;
+}
+
+.m-r-4{
+    margin-right: 4px;
+}
+
+@media only screen and (max-width: 600px) {
+    .responsiveHeader {
+      text-align: center;
+    }
+  }
