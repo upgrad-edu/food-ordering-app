@@ -1,0 +1,13 @@
+.app-header{
+    background-color: rgb(75, 65, 65);
+    height: 36px;
+    padding: 8px 32px 8px 16px;
+}
+
+.login-button{
+    float: right;
+}
+
+.login-spacing{
+    margin-left: 5px;
+}
