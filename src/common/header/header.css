@@ -1,13 +1,35 @@
 .app-header{
-    background-color: rgb(75, 65, 65);
+    background-color: rgb(64, 71, 71) !important;
     height: 36px;
     padding: 8px 32px 8px 16px;
 }
 
-.login-button{
-    float: right;
-}
-
 .login-spacing{
     margin-left: 5px;
+}
+
+.logo{
+    float: left;
+    vertical-align: center;
+}
+
+.app-logo{
+    color: white;
+    margin: 6px;
+}
+
+.search-box{
+    vertical-align: center;
+    text-align: center;
+}
+
+.search{
+    padding-bottom: 5px;
+    color: white;
+}
+
+.login-button{
+    float: right;
+    margin-top: -31px !important;
+    margin-right: -10px !important;
 }
