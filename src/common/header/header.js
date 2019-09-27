@@ -72,7 +72,6 @@ class Header extends Component {
             firstname: "",
             firstnameRequired: "dispNone",
             lastname: "",
-            lastnameRequired: "dispNone",
             email: "",
             emailRequired: "dispNone",
             signupPassword: "",
@@ -93,7 +92,6 @@ class Header extends Component {
             firstname: "",
             firstnameRequired: "dispNone",
             lastname: "",
-            lastnameRequired: "dispNone",
             email: "",
             emailRequired: "dispNone",
             signupPassword: "",
@@ -121,8 +119,6 @@ class Header extends Component {
     signupClickHandler = () => {
         this.state.firstname === "" ? this.setState({firstnameRequired: "dispBlock"}) :
         this.setState({firstnameRequired: "dispNone"});
-        this.state.lastname === "" ? this.setState({lastnameRequired: "dispBlock"}) :
-        this.setState({lastnameRequired: "dispNone"});
         this.state.email === "" ? this.setState({emailRequired: "dispBlock"}) :
         this.setState({emailRequired: "dispNone"});
         this.state.signupPassword === "" ? this.setState({signupPasswordRequired: "dispBlock"}) :
@@ -227,10 +223,9 @@ class Header extends Component {
                         <Input id="firstname" type="text" firstname={this.state.firstname} onChange={this.inputFirstnameChangeHandler}/>
                         <FormHelperText className={this.state.firstnameRequired}><span className="red">Required</span></FormHelperText>
                     </FormControl><br/><br/>
-                    <FormControl required className={classes.formControl}>
+                    <FormControl className={classes.formControl}>
                         <InputLabel htmlFor="lastname">Last Name</InputLabel>
                         <Input id="lastname" type="text" lastname={this.state.lastname} onChange={this.inputLastnameChangeHandler}/>
-                        <FormHelperText className={this.state.lastnameRequired}><span className="red">Required</span></FormHelperText>
                     </FormControl><br/><br/>
                     <FormControl required className={classes.formControl}>
                         <InputLabel htmlFor="email">Email</InputLabel>
