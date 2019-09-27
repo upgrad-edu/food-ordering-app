@@ -78,6 +78,7 @@ class Header extends Component {
             signupPasswordRequired: "dispNone",
             signupcontactno: "",
             signupcontactnoRequired: "dispNone",
+            validEmail: false,
         }
     }
 
@@ -119,13 +120,37 @@ class Header extends Component {
     signupClickHandler = () => {
         this.state.firstname === "" ? this.setState({firstnameRequired: "dispBlock"}) :
         this.setState({firstnameRequired: "dispNone"});
-        this.state.email === "" ? this.setState({emailRequired: "dispBlock"}) :
-        this.setState({emailRequired: "dispNone"});
+        //Email field validation
+        let isValidEmail = this.emailFieldValidation();
+
+       /*  this.state.email === "" ? this.setState({emailRequired: "dispBlock"}) :
+        this.setState({emailRequired: "dispNone"}); */
         this.state.signupPassword === "" ? this.setState({signupPasswordRequired: "dispBlock"}) :
         this.setState({signupPasswordRequired: "dispNone"});
         this.state.signupcontactno === "" ? this.setState({signupcontactnoRequired: "dispBlock"}) :
         this.setState({signupcontactnoRequired: "dispNone"});
     }
+
+    //Function to check the entered email is valid or not
+    emailFieldValidation = () => {
+        let isValidEmail = false;
+        if (this.state.email === "") {
+          this.setState({
+            emailRequired: "dispBlock",
+            validEmail: true
+          });
+        } else {
+          // Check for Valid email
+          var result = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(this.state.email);
+          this.setState({ validEmail: result });
+          result === false
+            ? this.setState({ emailRequired: "dispBlock" })
+            : this.setState({ emailRequired: "dispNone" });
+          isValidEmail = result;
+        }
+        return isValidEmail;
+    }
+
 
     inputloginContactnoChangeHandler = (e) => {
         this.setState({logincontactno: e.target.value});
@@ -230,7 +255,10 @@ class Header extends Component {
                     <FormControl required className={classes.formControl}>
                         <InputLabel htmlFor="email">Email</InputLabel>
                         <Input id="email" type="text" email={this.state.email} onChange={this.inputEmailChangeHandler}/>
-                        <FormHelperText className={this.state.emailRequired}><span className="red">Required</span></FormHelperText>
+                        <FormHelperText className={this.state.emailRequired}>
+                            {this.state.validEmail === true ? <span className="red">Required</span> : 
+                            <span className="red">Invalid Email</span>}
+                        </FormHelperText>
                     </FormControl><br/><br/>
                     <FormControl required className={classes.formControl}>
                         <InputLabel htmlFor="signupPassword">Password</InputLabel>
