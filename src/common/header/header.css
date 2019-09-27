@@ -38,3 +38,15 @@
     margin-bottom: 20px;
     text-align: center;
 }
+
+.dispNone{
+    display: none;
+}
+
+.dispBlock{
+    display: block;
+}
+
+.red{
+    color: red;
+}

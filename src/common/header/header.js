@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import PropTypes from 'prop-types';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 
 
@@ -63,12 +64,21 @@ class Header extends Component {
         super();
         this.state = {
             modalIsOpen: false,
-            value: 0
+            value: 0,
+            contactno: "",
+            contactnoRequired: "dispNone",
         }
     }
 
     openModalHandler = () => {
-        this.setState({modalIsOpen:true})
+        this.setState({
+            modalIsOpen:true,
+            value: 0,
+            contactnoRequired: "dispNone",
+            contactno: "",
+            password: "",
+            passwordRequired: "dispNone",
+        });
     }
 
     closeModalHandler = () => {
@@ -77,6 +87,21 @@ class Header extends Component {
 
     tabChangeHandler = (event, value) => {
         this.setState({value})
+    }
+
+    loginClickHandler = () => {
+        this.state.contactno === "" ? this.setState({contactnoRequired: "dispBlock"}) :
+         this.setState({contactnoRequired: "dispNone"});
+         this.state.password === "" ? this.setState({passwordRequired: "dispBlock"}) :
+         this.setState({passwordRequired: "dispNone"});
+    }
+
+    inputContactnoChangeHandler = (e) => {
+        this.setState({contactno: e.target.value})
+    }
+
+    inputPasswordChangeHandler = (e) => {
+        this.setState({password: e.target.value});
     }
 
     render() {
@@ -128,14 +153,18 @@ class Header extends Component {
                   <TabContainer>
                       <FormControl required className={classes.formControl}>
                           <InputLabel htmlFor="contactno">Contact No</InputLabel>
-                          <Input id="contactno" type="text" />
+                          <Input id="contactno" type="text" contactno={this.state.contactno} onChange=
+                          {this.inputContactnoChangeHandler}/>
+                          <FormHelperText className={this.state.contactnoRequired}><span className="red">Required</span></FormHelperText>
                       </FormControl><br/><br/>
                       <FormControl required className={classes.formControl}>
                           <InputLabel htmlFor="password">Password</InputLabel>
-                          <Input id="password" type="password" />
+                          <Input id="password" type="password" password={this.state.password} onChange=
+                          {this.inputPasswordChangeHandler}/>
+                          <FormHelperText className={this.state.passwordRequired}><span className="red">Required</span></FormHelperText>
                       </FormControl><br/>
                       <br/><br/>
-                      <Button variant="contained" color="primary">LOGIN</Button>
+                      <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
                   </TabContainer>}
                 </Modal>
             </div>
