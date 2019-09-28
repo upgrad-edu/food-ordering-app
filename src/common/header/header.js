@@ -19,7 +19,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Snackbar from '@material-ui/core/Snackbar';
 
 
-
 const styles = theme => ({
     searchBox: {
         color: "#fff",
@@ -82,9 +81,13 @@ class Header extends Component {
             validEmail: false,
             validPassword: false,
             validContactNo: false,
+            validLoginContactNo: false,
             signupErrorMsg: "",
             open: false,
             redirectToHome: false,
+            loginErrorMsg: "",
+            username: "",
+            
         }
     }
 
@@ -117,11 +120,17 @@ class Header extends Component {
     }
 
     loginClickHandler = () => {
-        this.state.logincontactno === "" ? this.setState({ logincontactnoRequired: "dispBlock" }) :
-            this.setState({ logincontactnoRequired: "dispNone" });
         this.state.loginpassword === "" ? this.setState({ loginpasswordRequired: "dispBlock" }) :
-            this.setState({ loginpasswordRequired: "dispNone" });
-    }
+        this.setState({ loginpasswordRequired: "dispNone" });
+
+        let isValidLoginContactNo = this.logincontactnoFieldValidation();
+        this.setState({
+            loginErrorMsg: ""
+        });
+        if(isValidLoginContactNo===true && this.state.loginpassword !== ""){
+            this.callLoginApi();
+        }
+      }
 
     signupClickHandler = () => {
         this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) :
@@ -211,6 +220,33 @@ class Header extends Component {
         return isValidContactNo;
     }
 
+    //Login contact no field validation
+    logincontactnoFieldValidation = () => {
+        let isValidLoginContactNo = false;
+        if (this.state.logincontactno === ""){
+            this.setState({
+                logincontactnoRequired: "dispBlock",
+                validLoginContactNo: true
+            });
+        } else {
+            //Check for valid mobile number
+            var resultContactNo = new RegExp(/^\d{10}$/).test(this.state.logincontactno);
+            if(this.state.logincontactno.length === 10 && resultContactNo === true){
+                isValidLoginContactNo = true;
+                this.setState({
+                    validLoginContactNo: true,
+                    logincontactnoRequired : "dispNone"
+                });
+            } else {
+                this.setState({
+                    validLoginContactNo: false,
+                    logincontactnoRequired: "dispBlock"
+                });
+            }
+        }
+        return isValidLoginContactNo;
+    }
+
     //Function is used to call Signup API
     callSignupApi = () => {
         let signupData = {
@@ -243,6 +279,36 @@ class Header extends Component {
         xhrSignup.setRequestHeader("Content-Type","application/json;charset=UTF-8");
         xhrSignup.send(JSON.stringify(signupData));
     }
+
+    //Function to all login API end point
+    callLoginApi = () => {
+        let xhrLogin = new XMLHttpRequest();
+        let that1 = this;
+
+        let loginEncoded = window.btoa(this.state.logincontactno+":"+this.state.loginpassword);
+        xhrLogin.addEventListener("readystatechange", function(){
+            if(this.readyState===4){
+                var data = JSON.parse(this.responseText);
+                if(this.status===200){
+                    that1.setState({
+                        open: true,
+                        successMessage: "Logged in successfully!",
+                        username: data.first_name
+                    });
+                    sessionStorage.setItem("access-token", this.getResponseHeader("access-token"));
+                    sessionStorage.setItem("username", data.first_name);
+                    that1.closeModalHandler();
+                } else if (this.status === 401){
+                   that1.setState({loginErrorMsg:data.message});
+                }
+            }
+        });
+        xhrLogin.open("POST", this.baseUrl+"/customer/login");
+        xhrLogin.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhrLogin.setRequestHeader("authorization", "Basic "+loginEncoded);
+        xhrLogin.send();    
+    }
+
 
     inputloginContactnoChangeHandler = (e) => {
         this.setState({ logincontactno: e.target.value });
@@ -329,14 +395,19 @@ class Header extends Component {
                             <FormControl required className={classes.formControl}>
                                 <InputLabel htmlFor="logincontactno">Contact No</InputLabel>
                                 <Input id="logincontactno" type="text" logincontactno={this.state.logincontactno} onChange={this.inputloginContactnoChangeHandler} />
-                                <FormHelperText className={this.state.logincontactnoRequired}><span className="red">Required</span></FormHelperText>
+                                <FormHelperText className={this.state.logincontactnoRequired}>
+                                {this.state.validLoginContactNo === true ? <span className="red">Required</span> :
+                                    <span className="red">Invalid Contact</span>}
+                                    </FormHelperText>
                             </FormControl><br /><br />
                             <FormControl required className={classes.formControl}>
                                 <InputLabel htmlFor="loginpassword">Password</InputLabel>
                                 <Input id="loginpassword" type="password" loginpassword={this.state.loginpassword} onChange={this.inputloginPasswordChangeHandler} />
                                 <FormHelperText className={this.state.loginpasswordRequired}><span className="red">Required</span></FormHelperText>
                             </FormControl><br />
-                            <br /><br />
+                               <br /><br />
+                               {(this.state.loginErrorMsg===undefined || this.state.loginErrorMsg===null || this.state.loginErrorMsg==="") ? null 
+                           : (<div className="error-msg">{this.state.loginErrorMsg}</div>)} <br/><br/>
                             <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
                         </TabContainer>}
                     {this.state.value === 1 &&
@@ -375,9 +446,9 @@ class Header extends Component {
                                    <span className="red">Contact No. must contain only numbers and must be 
                                    10 digits long</span>}
                                    </FormHelperText>
-                            </FormControl><br/><br/>
-                           {(this.state.signupErrorMsg === undefined || this.state.signupErrorMsg===null) ? null :
-                                (<div className="error-msg">{this.state.signupErrorMsg}</div>)} <br/>
+                            </FormControl><br /><br/>
+                           {(this.state.signupErrorMsg===undefined || this.state.signupErrorMsg===null || this.state.signupErrorMsg==="") ? null 
+                           : (<div className="error-msg">{this.state.signupErrorMsg}</div>)} <br/><br/>
                             <Button variant="contained" color="primary" onClick={this.signupClickHandler}>SIGNUP</Button>
                         </TabContainer>}
                 </Modal>
