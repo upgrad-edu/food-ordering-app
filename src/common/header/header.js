@@ -79,6 +79,7 @@ class Header extends Component {
             signupcontactnoRequired: "dispNone",
             validEmail: false,
             validPassword: false,
+            validContactNo: false,
         }
     }
 
@@ -124,13 +125,12 @@ class Header extends Component {
         let isValidEmail = this.emailFieldValidation();
         //Password field validation
         let isValidPassword = this.passwordFieldValidation();
-        /* this.state.signupPassword === "" ? this.setState({signupPasswordRequired: "dispBlock"}) :
-        this.setState({signupPasswordRequired: "dispNone"}); */
-        this.state.signupcontactno === "" ? this.setState({ signupcontactnoRequired: "dispBlock" }) :
-            this.setState({ signupcontactnoRequired: "dispNone" });
+        //Contact No. field validation
+        let isValidContactNo = this.contactnoFieldValidation();
     }
 
-    //Function to check the entered email is valid or not
+    //Function to check the entered email is valid or not.
+    //Eg. of valid email is like something@something.something
     emailFieldValidation = () => {
         let isValidEmail = false;
         if (this.state.email === "") {
@@ -151,7 +151,8 @@ class Header extends Component {
     }
 
     //Function to check entered password is valid or not
-
+    //A valid password is the one that contains 
+    //at least a capital letter, a small letter, a number and a special character
     passwordFieldValidation = () => {
         let isValidPassword = false;
         if (this.state.signupPassword === "") {
@@ -170,6 +171,34 @@ class Header extends Component {
             isValidPassword = resultPassword;
         }
         return isValidPassword;
+    }
+
+    //Function to check entered entered contact no. is valid or not
+    //A valid contact number is the one that contains a total of 10 digits
+    contactnoFieldValidation = () => {
+        let isValidContactNo = false;
+        if (this.state.signupcontactno === ""){
+            this.setState({
+                signupcontactnoRequired: "dispBlock",
+                validContactNo: true
+            });
+        } else {
+            //Check for valid mobile number
+            var resultContactNo = new RegExp(/^\d{10}$/).test(this.state.signupcontactno);
+            if(this.state.signupcontactno.length === 10 && resultContactNo === true){
+                isValidContactNo = true;
+                this.setState({
+                    validContactNo: true,
+                    signupcontactnoRequired : "dispNone"
+                });
+            } else {
+                this.setState({
+                    validContactNo: false,
+                    signupcontactnoRequired: "dispBlock"
+                });
+            }
+        }
+        return isValidContactNo;
     }
 
     inputloginContactnoChangeHandler = (e) => {
@@ -204,7 +233,7 @@ class Header extends Component {
     render() {
         const { classes } = this.props;
         return (
-            //This code section implements the LOGO and LOGIN button part of the header
+            //This code section implements the LOGO, Search Box and LOGIN button part of the header
             <div>
                 <header className="app-header">
                     <div className="logo">
@@ -285,14 +314,18 @@ class Header extends Component {
                                 <Input id="signupPassword" type="password" signupPassword={this.state.signupPassword} onChange={this.inputSignupPasswordChangeHandler} />
                                 <FormHelperText className={this.state.signupPasswordRequired}>
                                     {this.state.validPassword === true ? <span className="red">Required</span> :
-                                        <span className="red">Password must contain at least one capital letter, one small letter,
-                            one number, and one special character</span>}
+                                        <span className="red">Password must contain at least one capital letter, one small letter, one number, and
+                                         one special character</span>}
                                 </FormHelperText>
                             </FormControl><br /><br />
                             <FormControl required className={classes.formControl}>
                                 <InputLabel htmlFor="signupcontactno">Contact No</InputLabel>
                                 <Input id="signupcontactno" type="text" signupcontactno={this.state.signupcontactno} onChange={this.inputsignupcontactnoChangeHandler} />
-                                <FormHelperText className={this.state.signupcontactnoRequired}><span className="red">Required</span></FormHelperText>
+                                <FormHelperText className={this.state.signupcontactnoRequired}>
+                                   {this.state.validContactNo === true ? <span className="red">Required</span> :
+                                   <span className="red">Contact No. must contain only numbers and must be 
+                                   10 digits long</span>}
+                                   </FormHelperText>
                             </FormControl><br /><br /><br />
                             <Button variant="contained" color="primary" onClick={this.signupClickHandler}>SIGNUP</Button>
                         </TabContainer>}
