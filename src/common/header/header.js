@@ -16,6 +16,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 
@@ -61,6 +62,7 @@ TabContainer.propTypes = {
 class Header extends Component {
     constructor() {
         super();
+        this.baseUrl = "http://localhost:8080/api/";
         this.state = {
             modalIsOpen: false,
             value: 0,
@@ -80,6 +82,9 @@ class Header extends Component {
             validEmail: false,
             validPassword: false,
             validContactNo: false,
+            signupErrorMsg: "",
+            open: false,
+            redirectToHome: false,
         }
     }
 
@@ -127,6 +132,11 @@ class Header extends Component {
         let isValidPassword = this.passwordFieldValidation();
         //Contact No. field validation
         let isValidContactNo = this.contactnoFieldValidation();
+
+        this.setState({signupErrorMsg: ""})
+        if(isValidEmail===true && isValidPassword===true && isValidContactNo===true){
+            this.callSignupApi();
+        }
     }
 
     //Function to check the entered email is valid or not.
@@ -201,6 +211,39 @@ class Header extends Component {
         return isValidContactNo;
     }
 
+    //Function is used to call Signup API
+    callSignupApi = () => {
+        let signupData = {
+            contact_number: this.state.signupcontactno,
+            email_address: this.state.email,
+            first_name: this.state.firstname,
+            last_name: this.state.lastname,
+            password: this.state.signupPassword
+        };
+        let xhrSignup = new XMLHttpRequest();
+        let that = this;
+        xhrSignup.addEventListener("readystatechange", function(){
+            if(this.readyState === 4){
+                //check for user registration status if response status is 201 then user is registered
+                if(this.status===201){
+                    that.setState({
+                        open: true,
+                        successMessage: "Registered successfully! Please login now!"
+                      });
+                    that.tabChangeHandler("", 0);
+                } else if(this.status===400){
+                    that.setState({
+                        signupErrorMsg:
+                        "This contact number is already registered! Try other contact number."
+                     });
+                }
+            }
+        });
+        xhrSignup.open("POST", this.baseUrl+"/customer/signup");
+        xhrSignup.setRequestHeader("Content-Type","application/json;charset=UTF-8");
+        xhrSignup.send(JSON.stringify(signupData));
+    }
+
     inputloginContactnoChangeHandler = (e) => {
         this.setState({ logincontactno: e.target.value });
     }
@@ -229,6 +272,12 @@ class Header extends Component {
         this.setState({ signupcontactno: e.target.value });
     }
 
+    snackbarClose = (event, reason) => {
+        if(reason === "clickaway"){
+            return;
+        }
+        this.setState({open:false});
+    }
 
     render() {
         const { classes } = this.props;
@@ -326,10 +375,25 @@ class Header extends Component {
                                    <span className="red">Contact No. must contain only numbers and must be 
                                    10 digits long</span>}
                                    </FormHelperText>
-                            </FormControl><br /><br /><br />
+                            </FormControl><br/><br/>
+                           {(this.state.signupErrorMsg === undefined || this.state.signupErrorMsg===null) ? null :
+                                (<div className="error-msg">{this.state.signupErrorMsg}</div>)} <br/>
                             <Button variant="contained" color="primary" onClick={this.signupClickHandler}>SIGNUP</Button>
                         </TabContainer>}
                 </Modal>
+                <Snackbar
+                    anchorOrigin={{
+                        horizontal: "left",
+                        vertical: "bottom"
+                    }}
+                    open={this.state.open}
+                    onClose={this.snackbarClose}
+                    autoHideDuration={5000}
+                    ContentProps={{
+                        "aria-describedby":"message-id"
+                    }}
+                    message={<span id="message-id">{this.state.successMessage}</span>}
+                    />
             </div>
         )
     }

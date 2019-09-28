@@ -50,3 +50,11 @@
 .red{
     color: red;
 }
+
+.error-msg{
+    color: red;
+    padding-left: 40px;
+    padding-right: 25px;
+    text-align: left;
+    width: 85%;
+}
