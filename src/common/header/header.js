@@ -30,6 +30,10 @@ const styles = theme => ({
     },
     formControl: {
         width: "85%",
+    },
+    loggedUserButton: {
+        color: "#fff",
+         textTransform: "none"
     }
 });
 
@@ -368,16 +372,25 @@ class Header extends Component {
                                 </InputAdornment>
                             }
                             placeholder="Search by Restaurant Name"
-
                         />
                     </div>
                     <div className="login-button">
+                        {sessionStorage.getItem("username")!== null && (
+                            <Button className={classes.loggedUserButton}>
+                                <SvgIcon>
+                                    <AccountCircleIcon/>
+                                </SvgIcon>
+                                <span className="login-spacing">{sessionStorage.getItem("username")} </span>
+                            </Button>
+                        )}
+                        {sessionStorage.getItem("username") === null && (
                         <Button variant="contained" color="default" onClick={this.openModalHandler}>
                             <SvgIcon>
                                 <AccountCircleIcon />
                             </SvgIcon>
                             <span className="login-spacing">LOGIN</span>
                         </Button>
+                        )}
                     </div>
                 </header>
                 <Modal
@@ -405,7 +418,7 @@ class Header extends Component {
                                 <Input id="loginpassword" type="password" loginpassword={this.state.loginpassword} onChange={this.inputloginPasswordChangeHandler} />
                                 <FormHelperText className={this.state.loginpasswordRequired}><span className="red">Required</span></FormHelperText>
                             </FormControl><br />
-                               <br /><br />
+                               <br />
                                {(this.state.loginErrorMsg===undefined || this.state.loginErrorMsg===null || this.state.loginErrorMsg==="") ? null 
                            : (<div className="error-msg">{this.state.loginErrorMsg}</div>)} <br/><br/>
                             <Button variant="contained" color="primary" onClick={this.loginClickHandler}>LOGIN</Button>
