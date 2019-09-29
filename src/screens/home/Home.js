@@ -80,11 +80,34 @@ class Home extends Component {
         xhrRestaurants.send(dataRestaurants);
     }
 
+
+    searchHandler = (query) => {
+        let that = this;
+        let dataRestaurants = null;
+        let xhrRestaurants = new XMLHttpRequest();
+        xhrRestaurants.addEventListener("readystatechange", function(){
+            if(this.readyState === 4){
+                if(!JSON.parse(this.responseText).restaurants){
+                    that.setState({restaurants: null});
+                } else {
+                    that.setState({restaurants: JSON.parse(this.responseText).restaurants});
+                }
+            }
+        })
+        if (query === ''){
+            xhrRestaurants.open('GET', this.props.baseUrl+"/restaurant");
+         } else{
+             xhrRestaurants.open('GET', this.props.baseUrl+"/restaurant/name/"+query);
+         }
+         xhrRestaurants.send(dataRestaurants);
+    }
+
     render(){
         const {classes} = this.props;
         return(
             <div>
-                <Header showSearchBox={true} />
+                <Header showSearchBox={true} 
+                searchHandler={this.searchHandler}/>
 
                 {this.state.restaurants === null ?
                     <Typography className={classes.nullRestaurantList} variant='h6'>
