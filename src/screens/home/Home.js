@@ -27,7 +27,7 @@ const styles = theme => ({
         marginTop: 15,
         marginBottom: 10,
         marginLeft: 25,
-        marginRight: 5,
+        marginRight: 10,
         paddingBottom: 15,
         cursor: 'pointer',
     },
@@ -80,6 +80,10 @@ class Home extends Component {
         xhrRestaurants.send(dataRestaurants);
     }
 
+    restaurantCardTileOnClickHandler = (restaurantId) => {
+        this.props.history.push('/restaurant/'+restaurantId);
+    }
+
 
     searchHandler = (query) => {
         let that = this;
@@ -121,6 +125,7 @@ class Home extends Component {
                     >
                         {this.state.restaurants.map(restaurant => (
                             <GridListTile
+                                onClick={()=>this.restaurantCardTileOnClickHandler(restaurant.id)}
                                 key={'restaurant' + restaurant.id}>
                                 {/* restaurant details card */}
                                 <Card className={classes.restaurantCard} style={{ textDecoration: 'none' }}>
