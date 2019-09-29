@@ -4,6 +4,9 @@ import './index.css';
 import 'typeface-roboto';
 import * as serviceWorker from './serviceWorker';
 import Controller from "./screens/Controller";
+import 'font-awesome/css/font-awesome.min.css';
+import '../node_modules/font-awesome/css/font-awesome.min.css'; 
+
 
 ReactDOM.render( <Controller/> , document.getElementById('root'));
 

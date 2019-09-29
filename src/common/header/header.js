@@ -410,7 +410,7 @@ class Header extends Component {
         this.closeMenuItemsHandler();
        };
     
-      logoutHandler = () => {
+       logoutHandler = () => {
           this.closeMenuItemsHandler();
           this.setState({
             showUserProfileDropDown: false,
@@ -418,7 +418,16 @@ class Header extends Component {
           });
         this.callLogoutApi();
       };
-    
+
+
+      inputChangeHandler = e => {
+          sessionStorage.removeItem("query");
+          sessionStorage.setItem("query", e.target.value);
+          this.setState({query:e.target.value});
+          this.props.searchHandler(e.target.value);
+      }
+
+ 
 
     render() {
         const { classes } = this.props;
@@ -440,6 +449,7 @@ class Header extends Component {
                         </SvgIcon>
                     </div>
                     </Grid>
+                    {this.props.showSearchBox === true && (
                     <Grid item>
                     <div className="search-box">
                         <Input
@@ -452,10 +462,12 @@ class Header extends Component {
                                     </SvgIcon>
                                 </InputAdornment>
                             }
+                            onChange={this.inputChangeHandler}
                             placeholder="Search by Restaurant Name"
                         />
                     </div>
                     </Grid>
+                    )}
                     <Grid item>
                     <div className="login-button">
                         {sessionStorage.getItem("username")!== null && (
