@@ -7,7 +7,7 @@ import FastfoodIcon from '@material-ui/icons/Fastfood';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { withStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import Modal from 'react-modal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -17,6 +17,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Snackbar from '@material-ui/core/Snackbar';
+import Menu from "@material-ui/core/Menu";
+import { Link ,Redirect} from "react-router-dom";
+import MenuItem from "@material-ui/core/MenuItem";
+import Toolbar from "@material-ui/core/Toolbar";
+import Grid from "@material-ui/core/Grid";
 
 
 const styles = theme => ({
@@ -34,6 +39,9 @@ const styles = theme => ({
     loggedUserButton: {
         color: "#fff",
          textTransform: "none"
+    },
+    menuItems: {
+        marginTop: 30
     }
 });
 
@@ -59,8 +67,6 @@ const TabContainer = function (props) {
 TabContainer.propTypes = {
     children: PropTypes.node.isRequired
 }
-
-
 
 class Header extends Component {
     constructor() {
@@ -91,15 +97,19 @@ class Header extends Component {
             redirectToHome: false,
             loginErrorMsg: "",
             username: "",
-            
+            showUserProfileDropDown: false,
+            anchorEl: null,
         }
+    }
+
+    componentDidMount(){
     }
 
     openModalHandler = () => {
         this.setState({
             modalIsOpen: true,
             value: 0,
-            logincontactno: "",
+           /*  logincontactno: "",
             logincontactnoRequired: "dispNone",
             loginpassword: "",
             loginpasswordRequired: "dispNone",
@@ -111,12 +121,21 @@ class Header extends Component {
             signupPassword: "",
             signupPasswordRequired: "dispNone",
             signupcontactno: "",
-            signupcontactnoRequired: "dispNone",
+            signupcontactnoRequired: "dispNone", */
         });
     }
 
     closeModalHandler = () => {
-        this.setState({ modalIsOpen: false })
+        this.setState({ modalIsOpen: false });
+        //Resetting login tab parameters as that to before closing login tab
+        this.setState({logincontactnoRequired: "dispNone"});
+        this.setState({loginpasswordRequired: "dispNone"});
+        this.setState({value: 0});
+        //signup
+        this.setState({emailRequired: "dispNone"});
+        this.setState({firstnameRequired: "dispNone"});
+        this.setState({signupErrorMsg: ""});
+        this.setState({loginErrorMsg: ""});
     }
 
     tabChangeHandler = (event, value) => {
@@ -349,17 +368,56 @@ class Header extends Component {
         this.setState({open:false});
     }
 
+    openMenuItemsHandler = event => {
+        this.setState({
+          showUserProfileDropDown: true
+        });
+        this.setState({ anchorEl: event.currentTarget });
+      };
+    
+      closeMenuItemsHandler = () => {
+        this.setState({
+          showUserProfileDropDown: false
+        });
+        this.setState({ anchorEl: null });
+      };
+    
+      openProfilePageHandler = () => {
+        this.props.history.push("/profile");
+        this.closeMenuItemsHandler();
+       };
+    
+      logoutHandler = () => {
+          this.closeMenuItemsHandler();
+          this.setState({
+            showUserProfileDropDown: false,
+            username: ""
+          });
+        //this.callApiForLogout();
+      };
+    
+
     render() {
         const { classes } = this.props;
+        const { anchorEl} = this.state;
         return (
             //This code section implements the LOGO, Search Box and LOGIN button part of the header
             <div>
                 <header className="app-header">
+                <Toolbar>
+                        <Grid
+                            justify="space-between"
+                            container
+                            style={{ alignItems: "center" }}
+                            spacing={10} >
+                        <Grid item>
                     <div className="logo">
                         <SvgIcon className="app-logo">
                             <FastfoodIcon />
                         </SvgIcon>
                     </div>
+                    </Grid>
+                    <Grid item>
                     <div className="search-box">
                         <Input
                             className={classes.searchBox}
@@ -374,9 +432,15 @@ class Header extends Component {
                             placeholder="Search by Restaurant Name"
                         />
                     </div>
+                    </Grid>
+                    <Grid item>
                     <div className="login-button">
                         {sessionStorage.getItem("username")!== null && (
-                            <Button className={classes.loggedUserButton}>
+                            <Button 
+                                 onClick={this.openMenuItemsHandler}
+                                 className={classes.loggedUserButton}
+                                 aria-owns={anchorEl ? "simple-menu" : undefined}
+                                 aria-haspopup="true">
                                 <SvgIcon>
                                     <AccountCircleIcon/>
                                 </SvgIcon>
@@ -391,7 +455,26 @@ class Header extends Component {
                             <span className="login-spacing">LOGIN</span>
                         </Button>
                         )}
+                            {this.state.showUserProfileDropDown ? (
+                                <Menu
+                                    className={classes.menuItems}
+                                    id="simple-menu"
+                                    anchorEl={anchorEl}
+                                    open={Boolean(anchorEl)}
+                                    onClose={this.closeMenuItemsHandler}
+                                >
+                                    <Link to={"/profile"}>
+                                    <MenuItem onClick={this.closeMenuItemsHandler}>
+                                        My Profile
+                                    </MenuItem>
+                                    </Link>
+                                    <MenuItem onClick={this.logoutHandler}>Logout</MenuItem>
+                                </Menu>
+                                ) : null}
                     </div>
+                    </Grid>
+                    </Grid>
+                    </Toolbar>
                 </header>
                 <Modal
                     ariaHideApp={false}
@@ -429,7 +512,7 @@ class Header extends Component {
                                 <InputLabel htmlFor="firstname">First Name</InputLabel>
                                 <Input id="firstname" type="text" firstname={this.state.firstname} onChange={this.inputFirstnameChangeHandler} />
                                 <FormHelperText className={this.state.firstnameRequired}><span className="red">Required</span></FormHelperText>
-                            </FormControl><br /><br />
+                            </FormControl> <br /><br />
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="lastname">Last Name</InputLabel>
                                 <Input id="lastname" type="text" lastname={this.state.lastname} onChange={this.inputLastnameChangeHandler} />
@@ -478,6 +561,7 @@ class Header extends Component {
                     }}
                     message={<span id="message-id">{this.state.successMessage}</span>}
                     />
+                     {this.state.redirectToHome &&<Redirect to='/'></Redirect>}
             </div>
         )
     }

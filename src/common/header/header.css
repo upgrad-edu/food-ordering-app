@@ -10,7 +10,9 @@
 
 .logo{
     float: left;
-    vertical-align: center;
+    vertical-align: center; 
+    margin-left: -25px;
+    margin-bottom: 25px;
 }
 
 .app-logo{
@@ -20,8 +22,10 @@
 
 .search-box{
     vertical-align: center;
-    text-align: center;
+    margin-bottom: 30px;
+    margin-left: 30px;
 }
+
 
 .search{
     padding-bottom: 5px;
