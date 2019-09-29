@@ -332,6 +332,29 @@ class Header extends Component {
         xhrLogin.send();    
     }
 
+    //Function to call Logout API end point
+    callLogoutApi = () => {
+        let xhrLogout = new XMLHttpRequest();
+        let that = this;
+
+        xhrLogout.addEventListener("readystatechange", function(){
+            if(this.readyState===4){
+                var data = JSON.parse(this.responseText);
+                if(this.status===200){
+                    sessionStorage.removeItem("access-token");
+                    sessionStorage.removeItem("username");
+                    that.setState({redirectToHome: true})
+                } else if (this.status===401){
+                    that.setState({loginErrorMsg:data.message});
+                }
+           }
+        });
+        xhrLogout.open("POST", this.baseUrl + "customer/logout");
+        xhrLogout.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhrLogout.setRequestHeader("authorization", "Bearer "+sessionStorage.getItem("access-token"));
+        xhrLogout.send();
+    }
+
 
     inputloginContactnoChangeHandler = (e) => {
         this.setState({ logincontactno: e.target.value });
@@ -393,7 +416,7 @@ class Header extends Component {
             showUserProfileDropDown: false,
             username: ""
           });
-        //this.callApiForLogout();
+        this.callLogoutApi();
       };
     
 
