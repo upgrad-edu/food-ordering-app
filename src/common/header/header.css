@@ -72,8 +72,8 @@
 @media screen and (min-width:300px) and (max-width: 800px) {
     .search-box{
         margin-top: -80% !important;
-        padding-top: 0 !important;
-        padding-bottom: 0% !important;
+        padding: 0 !important;
+       /*  padding-bottom: 0% !important; */
         float: none;
         margin-bottom: -100% !important;
 
