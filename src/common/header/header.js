@@ -108,20 +108,6 @@ class Header extends Component {
     openModalHandler = () => {
         this.setState({
             modalIsOpen: true,
-            value: 0,
-           /*  logincontactno: "",
-            logincontactnoRequired: "dispNone",
-            loginpassword: "",
-            loginpasswordRequired: "dispNone",
-            firstname: "",
-            firstnameRequired: "dispNone",
-            lastname: "",
-            email: "",
-            emailRequired: "dispNone",
-            signupPassword: "",
-            signupPasswordRequired: "dispNone",
-            signupcontactno: "",
-            signupcontactnoRequired: "dispNone", */
         });
     }
 

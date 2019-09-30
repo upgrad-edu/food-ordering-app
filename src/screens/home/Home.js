@@ -66,7 +66,7 @@ class Home extends Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         //get restaurants from API 
         let that = this;
         let dataRestaurants = null;
@@ -82,6 +82,40 @@ class Home extends Component {
 
     restaurantCardTileOnClickHandler = (restaurantId) => {
         this.props.history.push('/restaurant/'+restaurantId);
+        this.updateCardsGridListCols();
+    }
+
+    componentDidMount() {
+        window.addEventListener('resize', this.updateCardsGridListCols);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateCardsGridListCols);
+    }
+
+    updateCardsGridListCols = () => {
+        if (window.innerWidth >= 1530) {
+            this.setState({ cards: 5 });
+            return;
+        }
+
+        if (window.innerWidth >= 1270) {
+            this.setState({ cards: 4 });
+            return;
+        }
+
+        if (window.innerWidth >= 1000) {
+            this.setState({ cards: 3 });
+            return;
+        }
+
+   
+        if (window.innerWidth >= 500) {
+            this.setState({ cards: 2 });
+            return;
+        }
+
+        this.setState({ cards: 1 });
     }
 
 
