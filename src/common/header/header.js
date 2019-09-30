@@ -105,6 +105,7 @@ class Header extends Component {
     componentDidMount(){
     }
 
+    //Function used to open modal.. this function initializes modal as per the set values defined within...
     openModalHandler = () => {
         this.setState({
             modalIsOpen: true,
@@ -126,6 +127,7 @@ class Header extends Component {
         });
     }
 
+    //Handler function to close the modal 
     closeModalHandler = () => {
         this.setState({ modalIsOpen: false });
         //Resetting login tab parameters as that to before closing login tab
@@ -139,10 +141,12 @@ class Header extends Component {
         this.setState({loginErrorMsg: ""});
     }
 
+    //Handler function to manage tab change events
     tabChangeHandler = (event, value) => {
         this.setState({ value })
     }
 
+    //Handler function defined for submitting login form on login tab it checks for login field validations
     loginClickHandler = () => {
         this.state.loginpassword === "" ? this.setState({ loginpasswordRequired: "dispBlock" }) :
         this.setState({ loginpasswordRequired: "dispNone" });
@@ -156,6 +160,9 @@ class Header extends Component {
         }
       }
 
+
+    //Handler function handles submission of signup form it performs email, password & contact no. field valiations
+    //before allowing user a successful signup otherwise it sends appropriate messages
     signupClickHandler = () => {
         this.state.firstname === "" ? this.setState({ firstnameRequired: "dispBlock" }) :
             this.setState({ firstnameRequired: "dispNone" });
@@ -356,35 +363,42 @@ class Header extends Component {
         xhrLogout.send();
     }
 
-
+    //function to handle the changes in contact no. field on log in form/tab
     inputloginContactnoChangeHandler = (e) => {
         this.setState({ logincontactno: e.target.value });
     }
 
+    //function to handle the changes in password field on log in form/tab
     inputloginPasswordChangeHandler = (e) => {
         this.setState({ loginpassword: e.target.value });
     }
 
+    //function to handle the changes in first name field on signup in form/tab
     inputFirstnameChangeHandler = (e) => {
         this.setState({ firstname: e.target.value });
     }
 
+    //function to handle the changes in last name field on signup in form/tab
     inputLastnameChangeHandler = (e) => {
         this.setState({ lastname: e.target.value });
     }
 
+    //function to handle the changes in email field on signup in form/tab
     inputEmailChangeHandler = (e) => {
         this.setState({ email: e.target.value })
     }
 
+    //function to handle the changes in password field on signup in form/tab
     inputSignupPasswordChangeHandler = (e) => {
         this.setState({ signupPassword: e.target.value });
     }
 
+    //function to handle the changes in contact no. field on signup in form/tab
     inputsignupcontactnoChangeHandler = (e) => {
         this.setState({ signupcontactno: e.target.value });
     }
 
+    //This function handles close event on snackbar
     snackbarClose = (event, reason) => {
         if(reason === "clickaway"){
             return;
@@ -392,6 +406,7 @@ class Header extends Component {
         this.setState({open:false});
     }
 
+    //Function opens the menu item list on onClick event on login buttion
     openMenuItemsHandler = event => {
         this.setState({
           showUserProfileDropDown: true
@@ -399,6 +414,7 @@ class Header extends Component {
         this.setState({ anchorEl: event.currentTarget });
       };
     
+      //Function closes the menu item list
       closeMenuItemsHandler = () => {
         this.setState({
           showUserProfileDropDown: false
@@ -406,11 +422,13 @@ class Header extends Component {
         this.setState({ anchorEl: null });
       };
     
+      //sending history information to the profile page
       openProfilePageHandler = () => {
         this.props.history.push("/profile");
         this.closeMenuItemsHandler();
        };
     
+       //This function handles log out event on the logout list/tab of menulist on the login button of header
        logoutHandler = () => {
           this.closeMenuItemsHandler();
           this.setState({
@@ -420,7 +438,7 @@ class Header extends Component {
         this.callLogoutApi();
       };
 
-
+      //This function handles the input query typed on search box
       inputChangeHandler = e => {
           sessionStorage.removeItem("query");
           sessionStorage.setItem("query", e.target.value);
@@ -434,7 +452,7 @@ class Header extends Component {
         const { classes } = this.props;
         const { anchorEl} = this.state;
         return (
-            //This code section implements the LOGO, Search Box and LOGIN button part of the header
+            //This code section implements the LOGO, Search Box and LOGIN button part of the header..the entire header implementation
             <div>
                 <header className="app-header">
                 <Toolbar>

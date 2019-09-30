@@ -11,6 +11,8 @@ import { withStyles } from '@material-ui/core/styles';
 import 'font-awesome/css/font-awesome.min.css';
 
 
+//Styles for representing different restaurant information fields on card 
+
 const styles = theme => ({
     nullRestaurantList: {
         marginTop: 15,
@@ -66,6 +68,7 @@ class Home extends Component {
         }
     }
 
+    //Calling get all restaurant /restaurant API to get all the restaurants with their entire details
     UNSAFE_componentWillMount() {
         //get restaurants from API 
         let that = this;
@@ -80,11 +83,14 @@ class Home extends Component {
         xhrRestaurants.send(dataRestaurants);
     }
 
+    //This function send the id of clicked restaurant to the further details page
     restaurantCardTileOnClickHandler = (restaurantId) => {
         this.props.history.push('/restaurant/'+restaurantId);
         this.updateCardsGridListCols();
     }
 
+
+    //Functions to resize the screens as needed
     componentDidMount() {
         window.addEventListener('resize', this.updateCardsGridListCols);
     }
@@ -93,6 +99,7 @@ class Home extends Component {
         window.removeEventListener('resize', this.updateCardsGridListCols);
     }
 
+    //This function is used to set the number of cards according to the screen width
     updateCardsGridListCols = () => {
         if (window.innerWidth >= 1530) {
             this.setState({ cards: 5 });
@@ -118,7 +125,7 @@ class Home extends Component {
         this.setState({ cards: 1 });
     }
 
-
+    //Function used to search  the restaurant by its name
     searchHandler = (query) => {
         let that = this;
         let dataRestaurants = null;
