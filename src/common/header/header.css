@@ -1,0 +1,94 @@
+/* Styles to set color parameter of header */
+.app-header{
+    background-color: rgb(64, 71, 71) !important;
+    overflow: hidden;
+}
+
+/* Style used to insert spacing*/
+.login-spacing{
+    margin-left: 5px;
+}
+
+/* Styles to arrange logo on header*/
+.logo{
+     vertical-align: center; 
+}
+
+
+.app-logo{
+    color: white;
+    margin: 6px;
+}
+
+/* Styles to arrange search bar field on header*/
+.search-box{
+    position: "relative";
+    display: inline-flex;
+    vertical-align: center;
+     width: 300px;
+}
+
+.search{
+    padding-bottom: 5px;
+    color: white;
+}
+
+/* Styles to represent modal tabs appropriately on modak*/
+.tabs{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Style to hide the display*/
+.dispNone{
+    display: none;
+}
+
+/* Style to show the display*/
+.dispBlock{
+    display: block;
+}
+
+/*Style to set the color to red value*/
+.red{
+    color: red;
+}
+
+/* Style to display error messages appropriately*/
+.error-msg{
+    color: red;
+    padding-left: 40px;
+    padding-right: 25px;
+    text-align: left;
+    width: 85%;
+}
+
+/* Added media queries to make header responsive when the screen is 500px wide or less */
+@media screen and (max-width: 500px) {
+    .login-button{
+      padding-bottom: 10% !important;
+      padding-top: 0 !important;
+      margin: 0% !important;
+      margin-top: -40% !important;
+    }
+}
+
+/* Add media queries for responsiveness - for the given screen width wide or less, stack the links on top of each other */
+@media screen and (min-width:300px) and (max-width: 800px) {
+    .search-box{
+        margin-top: -80% !important;
+        padding: 0 !important;
+       /*  padding-bottom: 0% !important; */
+        float: none;
+        margin-bottom: -100% !important;
+
+    }
+    .logo{
+       /*  padding-right: 42% !important; */
+        padding-bottom: 6% !important;
+        margin-bottom: -100% !important;
+        margin-top: 10% !important;
+
+    }
+}
+
