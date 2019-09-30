@@ -73,16 +73,16 @@
     .search-box{
         margin-top: -80% !important;
         padding-top: 0 !important;
-        padding-bottom: 0 !important;
+        padding-bottom: 0% !important;
         float: none;
         margin-bottom: -100% !important;
 
     }
     .logo{
        /*  padding-right: 42% !important; */
-        padding-bottom: 0 !important;
+        padding-bottom: 6% !important;
         margin-bottom: -100% !important;
-        margin-bottom: -100% !important;
+        margin-top: 10% !important;
 
     }
 }

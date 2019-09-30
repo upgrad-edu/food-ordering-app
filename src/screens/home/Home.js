@@ -20,14 +20,14 @@ const styles = theme => ({
         margin: 'auto',
     },
     restaurantCard: {
-        width: 250,
-        maxWidth: 250,
+        width: 295,
+        maxWidth: 300,
         height: 340,
         maxHeight: 340,
         marginTop: 15,
         marginBottom: 10,
         marginLeft: 25,
-        marginRight: 10,
+        marginRight: 0,
         paddingBottom: 15,
         cursor: 'pointer',
     },
@@ -66,7 +66,7 @@ class Home extends Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         //get restaurants from API 
         let that = this;
         let dataRestaurants = null;
