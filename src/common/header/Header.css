@@ -1,0 +1,78 @@
+.app-header{
+    background-color: rgb(64, 71, 71) !important;
+    height: 36px;
+    padding: 8px 32px 8px 16px;
+    flex-direction: column;
+}
+
+.login-button{
+     float: right;
+     margin-top: -31px !important;
+     margin-right: -10px !important;
+}
+
+.logo{
+    float: left;
+    vertical-align: center;
+}
+
+.app-logo{
+    color: white;
+    margin: 6px;
+}
+
+.search-box{
+    vertical-align: center;
+    margin-bottom: 30px;
+    margin-left: 30px;
+}
+
+.search{
+    padding-bottom: 5px;
+    color: white;
+}
+
+.login-spacing{
+    margin-left: 5px;
+}
+
+.tabs{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.dispNone{
+    display: none;
+}
+
+.dispBlock{
+    display: block;
+}
+
+.red{
+    color: red;
+}
+
+error-msg{
+    color: red;
+    padding-left: 40px;
+    padding-right: 25px;
+    text-align: left;
+    width: 85%;
+}
+
+@media screen and (max-width: 500px) {
+    .app-header{
+        flex-direction: row;
+    }
+    .logo{
+        float:none;
+        text-align: left;
+        flex-direction: row;
+    }
+    .login-button{
+        float: none;
+        margin-left: -60px;
+        flex-direction: row;
+    }
+}
