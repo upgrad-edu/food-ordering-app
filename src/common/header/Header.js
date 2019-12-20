@@ -7,7 +7,7 @@ import FastfoodIcon from '@material-ui/icons/Fastfood';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import {withStyles} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
 import Modal from 'react-modal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -17,6 +17,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import PropTypes from 'prop-types';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Snackbar from '@material-ui/core/Snackbar';
+import Menu from "@material-ui/core/Menu";
+import { Link ,Redirect} from "react-router-dom";
+import MenuItem from "@material-ui/core/MenuItem";
+import Toolbar from "@material-ui/core/Toolbar";
+import Grid from "@material-ui/core/Grid";
 
 const styles = theme => ({
     searchBox: {
@@ -34,6 +39,10 @@ const styles = theme => ({
      loggedUserButton: {
          color: "#fff",
          textTransform: "none"
+     },
+
+     menuItems: {
+         marginTop: 30
      }
 });
 
@@ -75,27 +84,6 @@ class Header extends Component {
                 firstname: "",
                 firstnameRequired: "dispNone",
                 lastname: "",
-                lastnameRequired: "dispNone",
-                email: "",
-                emailRequired: "dispNone",
-                signupPassword: "",
-                signupPasswordRequired: "dispNone",
-                signupcontactno: "",
-                signupcontactnoRequired: "dispNone",
-            }
-        }
-
-    openModalHandler = () => {
-            this.setState({
-                modalIsOpen:true,
-                value: 0,
-                logincontactno: "",
-                logincontactnoRequired: "dispNone",
-                loginpassword: "",
-                loginpasswordRequired: "dispNone",
-                firstname: "",
-                firstnameRequired: "dispNone",
-                lastname: "",
                 email: "",
                 emailRequired: "dispNone",
                 signupPassword: "",
@@ -103,6 +91,7 @@ class Header extends Component {
                 signupcontactno: "",
                 signupcontactnoRequired: "dispNone",
                 validEmail: false,
+                validPassword: false,
                 validContactNo: false,
                 validLoginContactNo: false,
                 signupErrorMsg: "",
@@ -110,15 +99,53 @@ class Header extends Component {
                 redirectToHome: false,
                 loginErrorMsg: "",
                 username: "",
-            });
+                showUserProfileDropDown: false,
+                anchorEl: null
+            }
         }
 
+    openModalHandler = () => {
+        this.setState({
+            modalIsOpen: true,
+            value: 0,
+            logincontactno: "",
+            logincontactnoRequired: "dispNone",
+            loginpassword: "",
+            loginpasswordRequired: "dispNone",
+            firstname: "",
+            firstnameRequired: "dispNone",
+            lastname: "",
+            email: "",
+            emailRequired: "dispNone",
+            signupPassword: "",
+            signupPasswordRequired: "dispNone",
+            signupcontactno: "",
+            signupcontactnoRequired: "dispNone",
+
+        });
+
+         // Change visibility of badge in details page if login button is clicked
+         if(this.props.changeBadgeVisibility) {
+            this.props.changeBadgeVisibility()
+         }
+    }
+
     closeModalHandler = () => {
-        this.setState({modalIsOpen:false})
+        this.setState({modalIsOpen:false});
+        this.setState({logincontactnoRequired: "dispNone"});
+        this.setState({loginpasswordRequired: "dispNone"});
+        this.setState({value: 0});
+        this.setState({emailRequired: "dispNone"});
+        this.setState({firstnameRequired: "dispNone"});
+        this.setState({signupErrorMsg: ""});
+        this.setState({loginErrorMsg: ""});
     }
 
     tabChangeHandler = (event, value) => {
         this.setState({value})
+    }
+
+    componentDidMount(){
     }
 
     loginClickHandler = () => {
@@ -137,7 +164,7 @@ class Header extends Component {
 
     signupClickHandler = () => {
         this.state.firstname === "" ? this.setState({firstnameRequired: "dispBlock"}) :
-        this.setState({firstnameRequired: "dispNone"});
+            this.setState({firstnameRequired: "dispNone"});
         let isValidEmail = this.emailFieldValidation();
         let isValidPassword = this.passwordFieldValidation();
         let isValidContactNo = this.contactnoFieldValidation();
@@ -199,6 +226,28 @@ class Header extends Component {
         xhrLogin.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhrLogin.setRequestHeader("authorization", "Basic "+loginEncoded);
         xhrLogin.send();
+    }
+
+    callLogoutApi = () => {
+        let xhrLogout = new XMLHttpRequest();
+        let that = this;
+
+        xhrLogout.addEventListener("readystatechange", function(){
+            if(this.readyState===4){
+                var data = JSON.parse(this.responseText);
+                if(this.status===200){
+                    sessionStorage.removeItem("access-token");
+                    sessionStorage.removeItem("username");
+                    that.setState({redirectToHome: true})
+                } else if (this.status===401){
+                    that.setState({loginErrorMsg:data.message});
+                }
+           }
+        });
+        xhrLogout.open("POST", this.baseUrl + "customer/logout");
+        xhrLogout.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhrLogout.setRequestHeader("authorization", "Bearer "+sessionStorage.getItem("access-token"));
+        xhrLogout.send();
     }
 
      emailFieldValidation = () => {
@@ -329,17 +378,64 @@ class Header extends Component {
         this.setState({open:false});
     }
 
+    openMenuItemsHandler = event => {
+            this.setState({
+              showUserProfileDropDown: true
+            });
+            this.setState({ anchorEl: event.currentTarget });
+    };
+
+    closeMenuItemsHandler = () => {
+        this.setState({
+          showUserProfileDropDown: false
+        });
+        this.setState({ anchorEl: null });
+    };
+
+    openProfilePageHandler = () => {
+        this.props.history.push("/profile");
+        this.closeMenuItemsHandler();
+    };
+
+    logoutHandler = () => {
+       this.closeMenuItemsHandler();
+       this.setState({
+        showUserProfileDropDown: false,
+        username: ""
+       });
+       this.callLogoutApi();
+    };
+
+     inputChangeHandler = e => {
+       sessionStorage.removeItem("query");
+       sessionStorage.setItem("query", e.target.value);
+       this.setState({query:e.target.value});
+       this.props.searchHandler(e.target.value);
+     }
+
     render() {
             const {classes} = this.props;
+            const { anchorEl} = this.state;
             return (
                 //This code section implements the LOGIN button part of the header
                     <div>
                         <header className="app-header">
+                         <Toolbar>
+                            <Grid
+                                justify="space-between"
+                                container
+                                style={{ alignItems: "center" }}
+                                spacing={10} >
+                            <Grid item>
                         <div className="logo">
                             <SvgIcon className="app-logo">
                                 <FastfoodIcon/>
                             </SvgIcon>
                         </div>
+                        </Grid>
+                        {this.props.showSearchBox === true && (
+                        <Grid item>
+                         {this.props.showSearchBox === true &&
                         <div className="search-box">
                             <Input
                                 className={classes.searchBox}
@@ -351,13 +447,22 @@ class Header extends Component {
                                         </SvgIcon>
                                     </InputAdornment>
                                 }
+                                onChange={this.inputChangeHandler}
                                 placeholder="Search by Restaurant Name"
 
                             />
                      </div>
+                     }
+                     </Grid>
+                     )}
+                     <Grid item>
                     <div className="login-button">
                     {sessionStorage.getItem("username")!== null && (
-                        <Button className={classes.loggedUserButton}>
+                        <Button
+                           onClick={this.openMenuItemsHandler}
+                           className={classes.loggedUserButton}
+                           aria-owns={anchorEl ? "simple-menu" : undefined}
+                           aria-haspopup="true">
                             <SvgIcon>
                                 <AccountCircleIcon/>
                             </SvgIcon>
@@ -372,9 +477,27 @@ class Header extends Component {
                             <span className="login-spacing">LOGIN</span>
                         </Button>
                         )}
+                        {this.state.showUserProfileDropDown ? (
+                            <Menu
+                                className={classes.menuItems}
+                                id="simple-menu"
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={this.closeMenuItemsHandler}
+                            >
+                                <Link to={"/profile"}>
+                                <MenuItem onClick={this.closeMenuItemsHandler}>
+                                    My Profile
+                                </MenuItem>
+                                </Link>
+                                <MenuItem onClick={this.logoutHandler}>Logout</MenuItem>
+                            </Menu>
+                            ) : null}
                     </div>
+                    </Grid>
+                    </Grid>
+                    </Toolbar>
                 </header>
-
                 <Modal
                     ariaHideApp={false}
                     isOpen={this.state.modalIsOpen}
@@ -467,6 +590,7 @@ class Header extends Component {
                     }}
                     message={<span id="message-id">{this.state.successMessage}</span>}
                     />
+                    {this.state.redirectToHome &&<Redirect to='/'></Redirect>}
             </div>
         )
     }

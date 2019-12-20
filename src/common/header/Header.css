@@ -2,6 +2,7 @@
     background-color: rgb(64, 71, 71) !important;
     height: 36px;
     padding: 8px 32px 8px 16px;
+    flex-direction: column;
 }
 
 .login-button{
@@ -22,7 +23,8 @@
 
 .search-box{
     vertical-align: center;
-    text-align: center;
+    margin-bottom: 30px;
+    margin-left: 30px;
 }
 
 .search{
@@ -57,4 +59,20 @@ error-msg{
     padding-right: 25px;
     text-align: left;
     width: 85%;
+}
+
+@media screen and (max-width: 500px) {
+    .app-header{
+        flex-direction: row;
+    }
+    .logo{
+        float:none;
+        text-align: left;
+        flex-direction: row;
+    }
+    .login-button{
+        float: none;
+        margin-left: -60px;
+        flex-direction: row;
+    }
 }
