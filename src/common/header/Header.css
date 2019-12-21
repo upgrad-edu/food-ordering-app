@@ -1,8 +1,6 @@
 .app-header{
     background-color: rgb(64, 71, 71) !important;
-    height: 36px;
-    padding: 8px 32px 8px 16px;
-    flex-direction: column;
+    overflow: hidden;
 }
 
 .login-button{
@@ -12,7 +10,6 @@
 }
 
 .logo{
-    float: left;
     vertical-align: center;
 }
 
@@ -22,9 +19,10 @@
 }
 
 .search-box{
-    vertical-align: center;
-    margin-bottom: 30px;
-    margin-left: 30px;
+     position: "relative";
+     display: inline-flex;
+     vertical-align: center;
+     width: 300px;
 }
 
 .search{
@@ -62,17 +60,27 @@ error-msg{
 }
 
 @media screen and (max-width: 500px) {
-    .app-header{
-        flex-direction: row;
+    .login-button{
+      padding-bottom: 10% !important;
+      padding-top: 0 !important;
+      margin: 0% !important;
+      margin-top: -40% !important;
+    }
+}
+
+@media screen and (min-width:300px) and (max-width: 800px) {
+    .search-box{
+        margin-top: -80% !important;
+        padding: 0 !important;
+        float: none;
+        margin-bottom: -100% !important;
+
     }
     .logo{
-        float:none;
-        text-align: left;
-        flex-direction: row;
-    }
-    .login-button{
-        float: none;
-        margin-left: -60px;
-        flex-direction: row;
+       /*  padding-right: 42% !important; */
+        padding-bottom: 6% !important;
+        margin-bottom: -100% !important;
+        margin-top: 10% !important;
+
     }
 }
