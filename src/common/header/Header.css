@@ -1,0 +1,11 @@
+.app-header {
+  height: 36px;
+  background:#253239;
+  padding: 10px 20px;
+} 
+
+.app-logo {
+  float: left;
+  line-height: 36px;
+  vertical-align: middle;
+}
