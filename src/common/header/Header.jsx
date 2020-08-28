@@ -37,8 +37,8 @@ const modalStyle = {
 
 class Header extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isModalOpen: false,
       tabsValue: 0,
@@ -75,7 +75,8 @@ class Header extends Component {
       firstNameError: false,
       lastName: "",
       email: "",
-      emailError: false,
+      emailRequiredError: false,
+      emailInvalidError: false,
       signupPassword: "",
       signupPasswordRequiredError: false,
       signupPasswordValidationError: false,
@@ -127,6 +128,134 @@ class Header extends Component {
 
   signupContactNumberInputHandler = (event) => {
     this.setState({ signupContactNumber: event.target.value });
+  }
+
+  isPasswordStrong = (password) => {
+    const NUMBER_REGEX = /(?=.*[0-9]).*/;
+    const LOWERCASE_REGEX = /(?=.*[a-z]).*/;
+    const UPPERCASE_REGEX = /(?=.*[A-Z]).*/;
+    const SPECIAL_CHARACTER_REGEX = /(?=.*[#@$%&*!^]).*/;
+
+    if (password.length < 8) {
+      return false;
+    }
+
+    if (!(NUMBER_REGEX.test(password))) {
+      return false;
+    }
+
+    if (!(LOWERCASE_REGEX.test(password))) {
+      return false
+    }
+
+    if (!(UPPERCASE_REGEX.test(password))) {
+      return false;
+    }
+
+    if (!(SPECIAL_CHARACTER_REGEX.test(password))) {
+      return false;
+    }
+
+    return true;
+}
+
+  validateSignupForm = () => {
+    let isFirstNameMissing = false;
+    let isEmailMissing = false;
+    let isEmailInvalid = false;
+    let isPasswordMissing = false;
+    let isPasswordWeak = false;
+    let isContactNumberMissing = false;
+    let isContactNumberInvalid = false;
+
+    const EMAIL_REGEX = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w+)+$/;
+    const CONTACT_NUMBER_REGEX = /[7-9][0-9]{9}/;
+
+    if (this.state.firstName === "") {
+      isFirstNameMissing = true;
+    }
+
+    if (this.state.email === "") {
+      isEmailMissing = true;
+    } else if (!(EMAIL_REGEX.test(this.state.email))) {
+      isEmailInvalid = true;
+    }
+    
+    if (this.state.signupPassword === "") {
+      isPasswordMissing = true;
+    } else if (!(this.isPasswordStrong(this.state.signupPassword))) { 
+      isPasswordWeak = true;
+    }
+    
+    if (this.state.signupContactNumber === "") { 
+      isContactNumberMissing = true;
+    } else if (!(CONTACT_NUMBER_REGEX.test(this.state.signupContactNumber))) {
+      isContactNumberInvalid = true;
+    }
+
+    this.setState({
+        firstNameError: isFirstNameMissing,
+        emailRequiredError: isEmailMissing,
+        emailInvalidError: isEmailInvalid,
+        signupPasswordRequiredError: isPasswordMissing,
+        signupPasswordValidationError: isPasswordWeak,
+        signupContactNumberRequiredError: isContactNumberMissing,
+        signupContactNumberValidationError: isContactNumberInvalid,
+        signupContactNumberRegisteredError: false
+    })
+
+    return (!isFirstNameMissing && !isEmailMissing && !isEmailInvalid && !isPasswordMissing && !isPasswordWeak && !isContactNumberMissing && !isContactNumberInvalid);
+  }
+
+  signupSubmitClickHandler = () => {
+    if (!(this.validateSignupForm())) return;
+
+    const url = this.props.baseUrl + "customer/signup";
+    const requestBody = JSON.stringify({ 
+      "contact_number": this.state.signupContactNumber,
+      "email_address": this.state.email,
+      "first_name": this.state.firstName,
+      "last_name": this.state.lastName,
+      "password": this.state.signupPassword
+    });
+
+    fetch(url, { 
+      method: 'POST',
+      headers: {
+        "Accept": "application/json;charset=UTF-8"
+      },
+      body: requestBody
+    })
+    .then(response => {
+      if (response.status === 201) {
+        this.setState({
+          tabsValue: 0,
+          snackbarMessage: "Registered successfully! Please login now!",
+          isSnackbarVisible: true,
+          firstName: "",
+          firstNameError: false,
+          lastName: "",
+          email: "",
+          emailRequiredError: false,
+          emailInvalidError: false,
+          signupPassword: "",
+          signupPasswordRequiredError: false,
+          signupPasswordValidationError: false,
+          signupContactNumber: "",
+          signupContactNumberRequiredError: false,
+          signupContactNumberValidationError: false,
+          signupContactNumberRegisteredError: false
+        })
+      } else if (response.status === 400) {
+        const json = JSON.parse(response.body);
+        if (json.code === 'SGR-001') {
+          this.setState({
+            signupContactNumberRegisteredError: true
+          })
+        }
+      }
+    })
+    .catch(err => console.log({err}));
   }
 
   render() {
@@ -231,8 +360,11 @@ class Header extends Component {
                   type="email"
                   value={this.state.email}
                   onChange={this.emailInputHandler} />
-                <FormHelperText className={this.state.emailError ? "dispBlock" : "dispNone"}>
+                <FormHelperText className={this.state.emailRequiredError ? "dispBlock" : "dispNone"}>
                   <span className="red">required</span>
+                </FormHelperText>
+                <FormHelperText className={this.state.emailInvalidError ? "dispBlock" : "dispNone"}>
+                  <span className="red">Invalid Email</span>
                 </FormHelperText>
               </FormControl>
               <br/>
@@ -272,7 +404,10 @@ class Header extends Component {
               <br/>
               <br/>
               <br/>
-              <Button variant="contained" color="primary">
+              <Button 
+                variant="contained" 
+                color="primary"
+                onClick={this.signupSubmitClickHandler}>
                 SIGNUP
               </Button>
             </div>
