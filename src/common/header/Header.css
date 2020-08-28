@@ -15,3 +15,20 @@
 .login-button-icon {
   margin-right: 10px;
 }
+
+.modal-content {
+  padding: 0 40px;
+  text-align: center;
+}
+
+.dispNone {
+  display: none;
+}
+
+.dispBlock {
+  display: block;
+}
+
+.red {
+  color: red;
+}
