@@ -10,6 +10,7 @@ import Tab from '@material-ui/core/Tab';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import Snackbar from '@material-ui/core/Snackbar';
 import Fastfood from '@material-ui/icons/Fastfood'
 import Search from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -56,7 +57,9 @@ class Header extends Component {
       signupContactNumber: "",
       signupContactNumberRequiredError: false,
       signupContactNumberValidationError: false,
-      signupContactNumberRegisteredError: false
+      signupContactNumberRegisteredError: false,
+      isSnackbarVisible: false,
+      snackbarMessage: ""
     }
   }
 
@@ -81,6 +84,13 @@ class Header extends Component {
       signupContactNumberValidationError: false,
       signupContactNumberRegisteredError: false
     });
+  }
+
+  closeSnackbarHandler = () => {
+    this.setState({ 
+      isSnackbarVisible: false,
+      snackbarMessage: ""
+    })
   }
 
   loginButtonClickHandler = () => {
@@ -268,6 +278,15 @@ class Header extends Component {
             </div>
           }
         </Modal>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.isSnackbarVisible}
+          autoHideDuration={4000}
+          onClose={this.closeSnackbarHandler}
+          message={<span>{this.state.snackbarMessage}</span>} />
       </Fragment>
     )
   }
