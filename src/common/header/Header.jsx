@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Modal from 'react-modal';
+import { Link } from 'react-router-dom';
 import './Header.css'
 import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
@@ -11,6 +12,9 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Snackbar from '@material-ui/core/Snackbar';
+import Menu from '@material-ui/core/Menu';
+import MenuList from '@material-ui/core/MenuList';
+import MenuItem from '@material-ui/core/MenuItem';
 import Fastfood from '@material-ui/icons/Fastfood'
 import Search from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -21,7 +25,12 @@ const classes = theme => ({
       textOverflow: "ellipsis !important",
       color: "white"
     }
-  }
+  },
+  profileButton: {
+    color:"#c2c2c2",
+    "text-transform":"none",
+    fontSize: '17px'
+  }    
 })
 
 const modalStyle = {
@@ -42,6 +51,8 @@ class Header extends Component {
     this.state = {
       isUserLoggedIn: localStorage.getItem('access-token') !== null,
       loggedInUserName: localStorage.getItem('user-name'),
+      isProfileMenuOpen: false,
+      profileMenuAnchorElement: null,
       isModalOpen: false,
       tabsValue: 0,
       loginContactNumber: "",
@@ -95,6 +106,13 @@ class Header extends Component {
     });
   }
 
+  closeProfileMenuHandler = () => {
+    this.setState({
+      profileMenuAnchorElement: null,
+      isProfileMenuOpen: false
+    })
+  }
+
   closeSnackbarHandler = () => {
     this.setState({ 
       isSnackbarVisible: false,
@@ -105,6 +123,13 @@ class Header extends Component {
   loginButtonClickHandler = () => {
     this.setState({ isModalOpen: true });
   }
+
+  profileButtonClickHandler = (event) => {
+    this.setState({ 
+      profileMenuAnchorElement: event.currentTarget,
+      isProfileMenuOpen: true
+    });
+  };
 
   tabsChangeHandler = (event, value) => {
     this.setState({ tabsValue: value });
@@ -342,7 +367,32 @@ class Header extends Component {
     .catch(err => console.log({err}));
   }
 
+  logoutMenuItemHandler = () => {
+    localStorage.removeItem("access-token");
+    localStorage.removeItem("user-uuid");
+    localStorage.removeItem("user-name");
+    this.setState({
+      isUserLoggedIn: false,
+      loggedInUserName: null
+    });
+    this.closeProfileMenuHandler();
+  }
+
   render() {
+    const menuButton = ( this.state.isUserLoggedIn ? 
+      <Button 
+        classes={{root: this.props.classes.profileButton }}
+        size="large"
+        variant="text"
+        onClick={this.profileButtonClickHandler} >
+        <AccountCircle className="profile-button-icon" htmlColor="#c2c2c2"/>
+        {this.state.loggedInUserName}
+      </Button> : 
+      <Button variant="contained" color="default" onClick={this.loginButtonClickHandler}>
+        <AccountCircle className="login-button-icon"/>
+        LOGIN
+      </Button>
+    );
     return (
       <Fragment>
         <header className="app-header">
@@ -358,11 +408,25 @@ class Header extends Component {
               placeholder="Search by Restaurant Name"
             />
           </div>
-          
-          <Button variant="contained" color="default" onClick={this.loginButtonClickHandler}>
-            <AccountCircle className="login-button-icon"/>
-            LOGIN
-          </Button>
+          { menuButton }
+          <Menu 
+            anchorEl={this.state.profileMenuAnchorElement}
+            getContentAnchorEl={null}
+            anchorOrigin={{ 
+              vertical: "bottom",
+              horizontal: "center"
+            }}
+            open={this.state.isProfileMenuOpen}
+            onClose={this.closeProfileMenuHandler}>
+            <MenuItem>
+              <Link to={"/profile"}>
+                My profile
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={this.logoutMenuItemHandler}>
+              Logout
+            </MenuItem>
+          </Menu>
         </header>
         <Modal
           ariaHideApp={false}

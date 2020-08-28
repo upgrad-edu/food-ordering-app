@@ -32,3 +32,12 @@
 .red {
   color: red;
 }
+
+.profile-button-icon {
+  margin-right: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: black
+}
