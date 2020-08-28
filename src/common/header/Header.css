@@ -1,21 +1,17 @@
 .app-header {
-  height: 36px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
   background:#253239;
-  padding: 10px 20px;
+  padding: 10px;
 } 
 
-.app-logo {
-  float: left;
-  line-height: 36px;
-  vertical-align: middle;
+.search-container {
+  width: 300px;
+  margin: 5px 0;
 }
 
-.search-container {
-  float: right;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  height: 36px;
-  width: 300px;
+.login-button-icon {
+  margin-right: 10px;
 }

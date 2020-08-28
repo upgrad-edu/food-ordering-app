@@ -3,15 +3,17 @@ import './Header.css'
 import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Button from '@material-ui/core/Button';
 import Fastfood from '@material-ui/icons/Fastfood'
 import Search from '@material-ui/icons/Search';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const classes = theme => ({
   searchInput: {
-    color: 'white'
-  },
-  searchIcon: {
-    height: '28px',
+    "&::placeholder": {
+      textOverflow: "ellipsis !important",
+      color: "white"
+    }
   }
 })
 
@@ -20,22 +22,23 @@ class Header extends Component {
   render() {
     return (
       <header className="app-header">
-        <div className="app-logo">
-          <Fastfood fontSize="large" htmlColor="white"/>
-        </div>
+        <Fastfood fontSize="large" htmlColor="white"/>
         <div className="search-container">
           <Input 
-            className={classes.searchInput}
+            classes={{ input: classes.searchInput }}
             startAdornment={
               <InputAdornment position="start">
-                <Search className={classes.searchIcon} htmlColor="white"/>
+                <Search htmlColor="white"/>
               </InputAdornment>
             }
-            fullWidth={true} 
             placeholder="Search by Restaurant Name"
-            color="primary"
           />
         </div>
+        
+        <Button variant="contained" color="default">
+          <AccountCircle className="login-button-icon"/>
+          LOGIN
+        </Button>
       </header>
     )
   }
