@@ -9,3 +9,13 @@
   line-height: 36px;
   vertical-align: middle;
 }
+
+.search-container {
+  float: right;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  width: 300px;
+}
