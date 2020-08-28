@@ -61,7 +61,26 @@ class Header extends Component {
   }
 
   closeModalHandler = () => {
-    this.setState({ isModalOpen: false });
+    this.setState({ 
+      isModalOpen: false,
+      tabsValue: 0,
+      loginContactNumber: "",
+      loginContactNumberError: false,
+      loginPassword: "",
+      loginPasswordError: false,
+      firstName: "",
+      firstNameError: false,
+      lastName: "",
+      email: "",
+      emailError: false,
+      signupPassword: "",
+      signupPasswordRequiredError: false,
+      signupPasswordValidationError: false,
+      signupContactNumber: "",
+      signupContactNumberRequiredError: false,
+      signupContactNumberValidationError: false,
+      signupContactNumberRegisteredError: false
+    });
   }
 
   loginButtonClickHandler = () => {
