@@ -40,12 +40,17 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isUserLoggedIn: localStorage.getItem('access-token') !== null,
+      loggedInUserName: localStorage.getItem('user-name'),
       isModalOpen: false,
       tabsValue: 0,
       loginContactNumber: "",
-      loginContactNumberError: false,
+      loginContactNumberRequiredError: false,
+      loginContactNumberInvalidError: false,
+      loginContactNumberUnregisteredError: false,
       loginPassword: "",
-      loginPasswordError: false,
+      loginPasswordRequiredError: false,
+      loginPasswordMismatchError: false,
       firstName: "",
       firstNameError: false,
       lastName: "",
@@ -68,9 +73,12 @@ class Header extends Component {
       isModalOpen: false,
       tabsValue: 0,
       loginContactNumber: "",
-      loginContactNumberError: false,
+      loginContactNumberRequiredError: false,
+      loginContactNumberInvalidError: false,
+      loginContactNumberUnregisteredError: false,
       loginPassword: "",
-      loginPasswordError: false,
+      loginPasswordRequiredError: false,
+      loginPasswordMismatchError: false,
       firstName: "",
       firstNameError: false,
       lastName: "",
@@ -258,6 +266,82 @@ class Header extends Component {
     .catch(err => console.log({err}));
   }
 
+  validateLoginForm = () => {
+    let isContactNumberMissing = false;
+    let isContactNumberInvalid = false;
+    let isPasswordMissing = false;
+
+    const CONTACT_NUMBER_REGEX = /[7-9][0-9]{9}/;
+
+    if (this.state.loginContactNumber === "") {
+      isContactNumberMissing = true;
+    } else if (!(CONTACT_NUMBER_REGEX.test(this.state.loginContactNumber))) {
+      isContactNumberInvalid = true;
+    }
+
+    if (this.state.loginPassword === "") {
+      isPasswordMissing = true;
+    }
+
+    this.setState({
+      loginContactNumberRequiredError: isContactNumberMissing,
+      loginContactNumberInvalidError: isContactNumberInvalid,
+      loginPasswordRequiredError: isPasswordMissing
+    })
+
+    return (!isContactNumberMissing && !isContactNumberInvalid && !isPasswordMissing);
+}
+
+  loginSubmitClickHandler = () => {
+    if (!(this.validateLoginForm())) return;
+
+    const url = this.props.baseUrl + "customer/login";
+    const requestBody = JSON.stringify({ 
+      "contact_number": this.state.loginContactNumber,
+      "password": this.state.loginPassword
+    });
+
+    fetch(url, { 
+      method: 'POST',
+      headers: {
+        "Accept": "application/json;charset=UTF-8"
+      },
+      body: requestBody
+    })
+    .then(response => {
+      if (response.status === 201) {
+        localStorage.setItem("access-token", response.headers.get("access-token"));
+        const responseJSON = JSON.parse(response.body);
+        localStorage.setItem("user-uuid", responseJSON.id);
+        localStorage.setItem("user-name", responseJSON.first_name);
+        this.setState({
+          isUserLoggedIn: true,
+          loggedInUserName: responseJSON.first_name,
+          snackbarMessage: "Logged in successfully!",
+          isSnackbarVisible: true,
+        });
+        this.closeModalHandler();
+      } else if (response.status === 401) {
+
+        let isContactNumberUnregistered = false;
+        let isPasswordMismatch = false;
+
+        const responseJSON = JSON.parse(this.responseText);
+        if (responseJSON.code === 'ATH-001') { 
+          isContactNumberUnregistered = true;
+        } else if (responseJSON.code === 'ATH-002') {
+          isPasswordMismatch = true;
+        }
+
+        this.setState({
+          loginContactNumberUnregisteredError: isContactNumberUnregistered,
+          loginPasswordMismatchError: isPasswordMismatch,
+        })
+      }
+    })
+    .catch(err => console.log({err}));
+  }
+
   render() {
     return (
       <Fragment>
@@ -302,8 +386,11 @@ class Header extends Component {
                   type="tel"
                   value={this.state.loginContactNumber}
                   onChange={this.loginContactNumberInputHandler}/>
-                <FormHelperText className={this.state.loginContactNumberError ? "dispBlock" : "dispNone"}>
+                <FormHelperText className={this.state.loginContactNumberRequiredError ? "dispBlock" : "dispNone"}>
                   <span className='red'>required</span>
+                </FormHelperText>
+                <FormHelperText className={this.state.loginContactNumberInvalidError ? "dispBlock" : "dispNone"}>
+                  <span className='red'>Invalid Contact Number</span>
                 </FormHelperText>
               </FormControl>
               <br />
@@ -315,14 +402,23 @@ class Header extends Component {
                   type="password"
                   value={this.state.loginPassword}
                   onChange={this.loginPasswordInputHandler} />
-                <FormHelperText className={this.state.loginPasswordError ? "dispBlock" : "dispNone"}>
+                <FormHelperText className={this.state.loginPasswordRequiredError ? "dispBlock" : "dispNone"}>
                   <span className='red'>required</span>
+                </FormHelperText>
+                <FormHelperText className={this.state.loginContactNumberUnregisteredError ? "dispBlock" : "dispNone"}>
+                  <span className='red'>This contact number has not been registered!</span>
+                </FormHelperText>
+                <FormHelperText className={this.state.loginPasswordMismatchError ? "dispBlock" : "dispNone"}>
+                  <span className='red'>Invalid Credentials</span>
                 </FormHelperText>
               </FormControl>
               <br/>
               <br/>
               <br/>
-              <Button variant="contained" color="primary">
+              <Button 
+                variant="contained"
+                color="primary"
+                onClick={this.loginSubmitClickHandler}>
                 LOGIN
               </Button>
             </div>
