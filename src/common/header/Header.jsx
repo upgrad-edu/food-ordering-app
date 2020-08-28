@@ -20,10 +20,19 @@ import Search from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 const classes = theme => ({
-  searchInput: {
+  searchBarInput: {
     "&::placeholder": {
       textOverflow: "ellipsis !important",
       color: "white"
+    },
+    color: "white"
+  },
+  searchBarUnderline: {
+    '&:before': {
+      borderBottom: '1px solid black',
+    },
+    '&:after': {
+      borderBottom: '1px solid white',
     }
   },
   profileButton: {
@@ -399,7 +408,11 @@ class Header extends Component {
           <Fastfood fontSize="large" htmlColor="white"/>
           <div className="search-container">
             <Input 
-              classes={{ input: classes.searchInput }}
+              fullWidth
+              classes={{ 
+                input: this.props.classes.searchBarInput,
+                underline: this.props.classes.searchBarUnderline
+              }}
               startAdornment={
                 <InputAdornment position="start">
                   <Search htmlColor="white"/>
