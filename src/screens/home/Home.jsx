@@ -16,6 +16,95 @@ import '@fortawesome/fontawesome-svg-core';
 
 import './Home.css';
 
+// Custom Styles to over ride material ui default styles
+const styles = (theme => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper
+  },
+
+  grid: { //style for the grid component
+    "padding": "20px",
+    "margin-left": "0.5%",
+    "margin-right": "0.5%",
+    transform: 'translateZ(0)',
+    cursor: 'pointer',
+  },
+  gridCard: { //Style for the Grid card
+    '@media (min-width: 1200px)': { //Making the code responsive to different screens
+
+      'flex-grow': '0',
+      'max-width': '25%',
+      'flex-basis': '25%',
+    },
+
+    '@media (min-width: 960px) and (max-width:1200px)': { //Making the code responsive to different screens
+      'flex-grow': '0',
+      'max-width': '33%',
+      'flex-basis': '33%',
+    },
+  },
+
+  card: { //Style for the card and responsive code for different screen size
+    height: "500px",
+    '@media (min-width: 1300px)': { //Making the code responsive to different screens
+      height: "500px",
+    },
+    '@media (min-width: 960px) and (max-width:1300px)': { //Making the code responsive to different screens
+      height: "375px",
+    }
+  },
+
+  media: { // style for the image in the card
+    height: "40%",
+    width: "100%",
+    // paddingTop: '56.25%', // 16:9
+  },
+  title: { //Style for the Title in the Card
+    "font-size": "25px",
+    '@media (min-width: 1300px)': {
+      "font-size": "40px",
+    },
+    '@media (min-width: 960px) and (max-width:1300px)': {
+      "font-size": "30px",
+    },
+    '@media (max-width: 960px)': {
+      "font-size": "40px",
+    }
+  },
+  categories: { //Style for the categories in the card
+    "font-size": "16px",
+    '@media (min-width: 1300px)': {
+      "font-size": "22px",
+    },
+    '@media (min-width: 960px) and (max-width:1300px)': {
+      "font-size": "20px",
+    },
+    '@media (max-width: 960px)': {
+      "font-size": "22px",
+    }
+  },
+
+
+  cardContent: { // Styles for the card content
+    "padding": "10px",
+    "margin-left": "20px",
+    "margin-right": "20px",
+    "height": "20%",
+    "display": "flex",
+    "align-items": "center",
+  },
+  cardActionArea: { //Style for the Card action area button
+    "display": "flex",
+    "height": "100%",
+    "flex-direction": "column",
+    "align-items": "normal",
+    "justify-content": "space-between",
+
+  }
+
+}))
+
 // Creating Home class component to render the home page as per the design
 class Home extends Component {
   constructor() {
