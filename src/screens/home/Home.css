@@ -17,3 +17,12 @@
     color: white;
 
 }
+
+/* Style for the Restaurant card bottom info */
+.card-bottom-info{
+    display: flex;
+    justify-content: space-between;
+    height: 30px;
+    align-items: center;
+    width: 100%;
+}
