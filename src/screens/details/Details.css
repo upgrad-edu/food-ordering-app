@@ -7,7 +7,27 @@
     background-color: rgb(231, 231, 231)
 }
 
+/* Responsive code for the smaller screen size */
+@media screen and (max-width:600px){
+    .restaurant-details-container{
+        flex-direction: column;
+    }
+    .restaurant-details{
+        text-align: center;
+    }
+    .restaurant-avg-cost-container{
+        margin-left: auto;
+    }
+    .restaurant-rating{
+        align-self: center;
 
+    }
+    .restaurant-avg-cost{
+        place-content: center;
+    }
+   
+
+}
 
 /* Style for the container containing rating and cost   */
 .restaurant-rating-cost-container{
