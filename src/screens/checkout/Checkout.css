@@ -1,0 +1,60 @@
+
+/* Style for the Checkout container containing stepper and order summary card */
+.checkout-container{
+    display:flex;
+    padding-top: 20px;
+    padding-right:16px; 
+    justify-content: space-between;
+}
+
+/* Responsive code for small screen size */
+@media screen and (max-width:670px){
+    .checkout-container{
+        flex-direction: column;
+        padding: 20px 16px;
+    }
+    .stepper-container{
+        width: 100%;
+        padding: 0px;
+    }
+    .summary-container{
+        width:100%;
+        margin-top: 5px;
+    }
+}
+
+@media (min-width:670px) and (max-width:1200px){
+    .stepper-container{
+        width: 60%;
+    }
+    .summary-container{
+        width:40%;
+        margin-top: 5px;
+    }
+}
+
+
+/* Style fro the address tabs  */
+.address-tabs{
+    background-color: rgb(63,81,180);
+    color: white;
+    height:50px;
+}
+
+
+/* Style for the grid */
+.grid-list-tile-container{
+    padding:16px 8px 16px 16px;
+}
+
+/* Style to hide the element */
+.dispNone {
+    display: none;
+}
+
+/* Style to show the element */
+.dispBlock {
+    display: block;
+}
+
+
