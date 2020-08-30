@@ -96,3 +96,18 @@
     align-items: baseline;
 }
 
+/* Style for the Coupon Conatiner */
+.coupon-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+/* Style for the label  */
+.label-amount-container{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 10px 0px;
+}
