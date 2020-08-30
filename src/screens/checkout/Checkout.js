@@ -240,7 +240,57 @@ class Checkout extends Component {
             activeStep: 0,
         });
     }
+    // This method calls the getAllAddress of customer endpoint 
+    //Updates the page with all the address of the customer
+    getAllAddress = () => {
+        let data = null;
+        let that = this;
+        let xhrAddress = new XMLHttpRequest();
 
+        xhrAddress.addEventListener('readystatechange', function () {
+            if (xhrAddress.readyState === 4 && xhrAddress.status === 200) {
+                let responseAddresses = JSON.parse(xhrAddress.responseText).addresses;
+                let addresses = [];
+                responseAddresses.forEach(responseAddress => {
+                    let address = {
+                        id: responseAddress.id,
+                        city: responseAddress.city,
+                        flatBuildingName: responseAddress.flat_building_name,
+                        locality: responseAddress.locality,
+                        pincode: responseAddress.pincode,
+                        state: responseAddress.state,
+                        selected: false,
+                    }
+                    addresses.push(address)
+                })
+                that.setState({
+                    ...that.state,
+                    addresses: addresses
+                })
+            }
+        })
+
+        xhrAddress.open('GET', this.props.baseUrl + 'address/customer');
+        xhrAddress.setRequestHeader('authorization', 'Bearer ' + this.state.accessToken)
+        xhrAddress.send(data);
+
+    }
+
+    // Updates the column no as per the screen size.
+    getGridListColumn = () => {
+        if (window.innerWidth <= 600) {
+            this.setState({ 
+                ...this.state,
+                noOfColumn: 2 
+            });
+        }else{
+            this.setState({ 
+                ...this.state,
+                noOfColumn: 3 
+            });
+        }
+    }
+    
     //This method handles change in the tabs.
     tabsChangeHandler = (event, value) => {
         this.setState({
