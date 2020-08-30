@@ -29,6 +29,11 @@
 
 }
 
+/* Style for the container containing rating and cost   */
+.restaurant-rating-cost-container{
+    display: flex;
+    align-items: center;
+}
 
 /* Responsive code for the smaller screen size */
 @media screen and (min-width:600px){
