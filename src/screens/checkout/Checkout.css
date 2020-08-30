@@ -58,3 +58,21 @@
 }
 
 
+/* Responsive code */
+@media screen and (min-width:1200px){
+    .stepper-container{
+      width: 74%;
+    }
+    .summary-container{
+        width:25%;
+        margin-top: 5px;
+    }
+}
+
+
+/* Style for the menu item container */
+.menu-item-container{
+    display: flex;
+    align-items: center;
+}
+
