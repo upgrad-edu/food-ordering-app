@@ -30,6 +30,26 @@
 }
 
 
+/* Responsive code for the smaller screen size */
+@media screen and (min-width:600px){
+    .restaurant-details{
+        margin-left: 75px;
+        width: 100%;
+    }
+}
+.restaurant-avg-cost-container{
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+}
+
+/* Style for the restaurant rating */
+.restaurant-rating{
+    display: flex;
+    align-items: baseline;
+
+}
+
 /* Style for restaurant avg cost */
 .restaurant-avg-cost{
     display: flex;
