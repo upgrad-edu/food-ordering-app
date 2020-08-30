@@ -191,6 +191,70 @@ class Checkout extends Component {
         return ['Delivery', 'Payment'];
     }
 
+
+    //This method is called when next button is clicked in the stepper.
+    nextButtonClickHandler = () => {
+        if (this.state.value === 0) {
+            if (this.state.selectedAddress !== "") {
+                let activeStep = this.state.activeStep;
+                activeStep++;
+                this.setState({
+                    ...this.state,
+                    activeStep: activeStep,
+                });
+            } else {
+                this.setState({
+                    ...this.state,
+                    snackBarOpen: true,
+                    snackBarMessage: "Select Address"
+                })
+            }
+        }
+        if(this.state.activeStep === 1){
+            if(this.state.selectedPayment === ""){
+                let activeStep = this.state.activeStep;
+                this.setState({
+                    ...this.state,
+                    activeStep:activeStep,
+                    snackBarOpen: true,
+                    snackBarMessage:"Select Payment",
+                })
+            }
+        }
+    }
+
+    //This method is called when back button is clicked in the stepper
+    backButtonClickHandler = () => {
+        let activeStep = this.state.activeStep;
+        activeStep--;
+        this.setState({
+            ...this.state,
+            activeStep: activeStep,
+        });
+    }
+
+    //This method is called when the change button in the stepper is called
+    changeButtonClickHandler = () => {
+        this.setState({
+            ...this.state,
+            activeStep: 0,
+        });
+    }
+
+    //This method handles change in the tabs.
+    tabsChangeHandler = (event, value) => {
+        this.setState({
+            value,
+        });
+    }
+
+    //This is called when a radio button is selected  in the payment
+    radioChangeHandler = (event) => {
+        this.setState({
+            ...this.state,
+            selectedPayment: event.target.value,
+        })
+    }
     //This method is called when the components are mounted and in turn calls the api.
     //This method call get all address,get all states and get all payment endpoints.
     //Then re-renders the page with the data received from the api
