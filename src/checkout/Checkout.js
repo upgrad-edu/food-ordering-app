@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Checkout.css';
-//import Header from '../../common/header';
+import Header from '../common/header/Header';
 import { Redirect } from 'react-router-dom'
 import 'font-awesome/css/font-awesome.min.css';
 
@@ -666,7 +666,7 @@ export class Checkout extends Component {
             <div>
                 {this.redirectToHome()}
                 {/* Header Import*/}
-              { /*  <Header baseUrl={this.props.baseUrl} showHeaderSearchBox={false} logoutRedirect={this.logoutRedirectToHome}/> */}
+				<Header baseUrl={this.props.baseUrl} showHeaderSearchBox={false} logoutRedirect={this.logoutRedirectToHome}/>
                 <div className="checkout-container">
                         <div className="stepper-container">
                             <Stepper activeStep={this.state.activeStep} orientation="vertical" className={classes.stepper}>
