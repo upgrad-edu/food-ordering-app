@@ -21,7 +21,7 @@ class FoodOrderingApp extends Component {
             <Switch>
                 <Route path='/checkout' render={(props) => (
                              sessionStorage.getItem('access-token') === null ? (
-                                 <Redirect to='/checkout'></Redirect>
+                                 <Redirect to='/'></Redirect>
                              ) : (
                                  <Checkout {...props} baseUrl={this.baseUrl} />
                             ))} />
