@@ -638,7 +638,7 @@ class Header extends Component {
                         signupErrorMessageRequired: "dispBlock"
                     });
                 }
-                // after successful signup tab changes to login tab inside the modal and displays the signup snackbar
+                // after successful signup tab changes to login tab inside the modal and displays the signup snackbar beside
                 if (this.status === 201) {
                     that.setState({
                         value: 0,
