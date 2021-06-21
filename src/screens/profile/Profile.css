@@ -1,0 +1,7 @@
+.page-title {
+	top: 50%;
+	left: 50%;
+	color: #263238;
+	transform: translate(-50%, -50%);
+	position: absolute;
+}

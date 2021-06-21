@@ -1,0 +1,29 @@
+.icon-type {
+    margin-top: 5px;
+}
+
+.item-name {
+    text-align: left;
+    min-width: 50%;
+}
+
+.quantity {
+    min-width: 20%;
+}
+
+.amount {
+    width: 247px;
+    display: inline-block;
+}
+
+.payable-bill-amount {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+
+.place-order-button {
+    width: 100%;
+}
+
