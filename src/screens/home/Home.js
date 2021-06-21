@@ -171,6 +171,13 @@ class Home extends Component {
         let that = this;
         let filteredRestaurants = null;
         let xhrFilteredRestaurants = new XMLHttpRequest();
+        if (event.target.value === '') {
+            this.getRestaurants();
+        } else {
+            let url = this.props.baseUrl + 'restaurant/name/' + event.target.value;
+            xhrFilteredRestaurants.open("GET", url);
+            xhrFilteredRestaurants.send(filteredRestaurants);
+        }
         xhrFilteredRestaurants.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 if (!JSON.parse(this.responseText).restaurants) {
@@ -184,13 +191,7 @@ class Home extends Component {
                 }
             }
         });
-        if (event.target.value === '') {
-            this.getRestaurants();
-        } else {
-            let url = this.props.baseUrl + 'restaurant/name/' + event.target.value;
-            xhrFilteredRestaurants.open("GET", url);
-            xhrFilteredRestaurants.send(filteredRestaurants);
-        }
+        
     }
 
     // redirects to restaurant details page with restauranat id
