@@ -1,0 +1,102 @@
+.main-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.delivery-payment-section {
+    width: 70%;
+}
+
+.display-block {
+    display: block;
+}
+
+.display-none {
+    display: none;
+}
+
+.address-box{
+    margin: 10px;
+}
+
+.grid-list-tile-selected-address {
+    margin: 10px;
+    border: 1px solid deeppink;
+    border-right: 3px solid deeppink;
+    border-bottom: 3px solid deeppink;
+    border-radius: 5px;
+}
+
+#new-address-display{
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.select-address-icon-container {
+    color: green;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.select-address-icon {
+    margin-right: 40px;
+}
+
+.display-green-icon {
+    color: rgba(0, 150, 0, 0.54);
+}
+
+.display-grey-icon {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.existing-address-grid-list {
+    flex-wrap: nowrap;
+    transform: translateZ(0);
+}
+
+#payment-modes {
+    margin-bottom: 15px;
+}
+
+.summary-section {
+    width: 30%;
+}
+
+.summary-card {
+    margin-top: 30px;
+    margin-right: 20px;
+}
+
+.summary-heading {
+    margin: 0px;
+}
+
+@media (min-width: 320px) and (max-width: 900px) {
+    .main-container {
+        height: 100vh;
+        display: block;
+    }
+
+    .delivery-payment-section {
+        width: 100%;
+    }
+
+    .summary-section {
+        width: 100%;
+    }
+
+    .summary-card {
+        margin-left: 20px;
+    }
+}
+
+@media (min-width: 900px) and (max-width: 1400px) {
+    .delivery-payment-section{
+        width: 58%;
+    }
+    .summary-section {
+        width: 42%;
+    }
+}

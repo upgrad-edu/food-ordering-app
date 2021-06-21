@@ -1,0 +1,57 @@
+.tabs {
+	margin-bottom: 20px;
+}
+
+.MuiFormControl-root.login-and-signup-forms {
+	width: 80%;
+}
+
+.dispNone {
+	display: none;
+}
+
+.dispBlock {
+	display: block;
+}
+
+.red {
+	color: red;
+}
+
+#login-error-msg-div {
+	display: flex;
+	font-size: smaller;
+}
+
+#login-error-msg {
+	width: 80%;
+	margin: auto;
+	text-align: left;
+}
+
+#customer-profile {
+	color: white;
+}
+
+#signup-error-msg-div {
+	display: flex;
+	font-size: smaller;
+}
+
+#signup-error-msg {
+	width: 80%;
+	margin: auto;
+	text-align: left;
+}
+
+
+/* For screen size upto 600px */
+
+@media screen and (max-width: 600px) {
+	#login-error-msg-div {
+		font-size: x-small;
+	}
+	#signup-error-msg-div {
+		font-size: x-small;
+    }
+}
